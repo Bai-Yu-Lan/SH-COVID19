@@ -431,10 +431,12 @@ function plotPOIBar(tempData){
     //     .style("text-anchor", "end");
         // .text("Value");
 
+    // svg.selectAll(".bar")
     svg.selectAll(".bar")
         .data(tempData)
         .enter().append("rect")
-        .attr("class", "bar")
+        // .attr("class", "bar")
+        .attr("class", "popup_bar")
         .attr("x", function(d) { return x(d.date); })
         .attr("width", x.rangeBand())
         .attr("y", function(d) { return y(d.num); })

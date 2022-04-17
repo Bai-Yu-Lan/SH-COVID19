@@ -125,7 +125,8 @@
     background:0 0
    }
    .bar {
-    fill:#b04ee9!important
+    /* fill:#b04ee9!important */
+    fill:#3fd68e!important
    }
    as-histogram-widget svg .yAxis .tick line {
     stroke:#fff;
