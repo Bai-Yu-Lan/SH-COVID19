@@ -1,0 +1,125 @@
+/* stylelint-disable */
+@font-face {
+  font-family: 'airship';
+  src:
+    url('fonts/airship.ttf?vgkfz5') format('truetype'),
+    url('fonts/airship.woff?vgkfz5') format('woff'),
+    url('fonts/airship.svg?vgkfz5#airship') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+i {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'airship' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.as-icon-undo:before {
+  content: "\e900";
+}
+.as-icon-twitter:before {
+  content: "\e901";
+}
+.as-icon-tick-circle-fill:before {
+  content: "\e902";
+}
+.as-icon-tick-circle:before {
+  content: "\e903";
+}
+.as-icon-tick:before {
+  content: "\e904";
+}
+.as-icon-settings:before {
+  content: "\e905";
+}
+.as-icon-redo:before {
+  content: "\e906";
+}
+.as-icon-question:before {
+  content: "\e907";
+}
+.as-icon-points:before {
+  content: "\e908";
+}
+.as-icon-plus:before {
+  content: "\e909";
+}
+.as-icon-play:before {
+  content: "\e90a";
+}
+.as-icon-pencil:before {
+  content: "\e90b";
+}
+.as-icon-pause:before {
+  content: "\e90c";
+}
+.as-icon-minus:before {
+  content: "\e90d";
+}
+.as-icon-marker:before {
+  content: "\e90e";
+}
+.as-icon-magnify:before {
+  content: "\e90f";
+}
+.as-icon-linkedin:before {
+  content: "\e910";
+}
+.as-icon-info:before {
+  content: "\e911";
+}
+.as-icon-home:before {
+  content: "\e912";
+}
+.as-icon-hamburguer:before {
+  content: "\e913";
+}
+.as-icon-hamburger:before {
+  content: "\e914";
+}
+.as-icon-facebook:before {
+  content: "\e915";
+}
+.as-icon-close:before {
+  content: "\e916";
+}
+.as-icon-chevron-up:before {
+  content: "\e917";
+}
+.as-icon-chevron-right:before {
+  content: "\e918";
+}
+.as-icon-chevron-left:before {
+  content: "\e919";
+}
+.as-icon-chevron-down:before {
+  content: "\e91a";
+}
+.as-icon-arrow-up:before {
+  content: "\e91b";
+}
+.as-icon-arrow-right:before {
+  content: "\e91c";
+}
+.as-icon-arrow-left:before {
+  content: "\e91d";
+}
+.as-icon-arrow-down:before {
+  content: "\e91e";
+}
+.as-icon-alert-fill:before {
+  content: "\e91f";
+}
+.as-icon-alert:before {
+  content: "\e920";
+}

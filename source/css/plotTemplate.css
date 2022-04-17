@@ -49,3 +49,11 @@ fill: greenyellow;
     left: 0;
 }
 
+.show_datetime{
+    /* background:black; */
+    color:white;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 18px;
+    font-family:"Segoe UI Black";
+}
