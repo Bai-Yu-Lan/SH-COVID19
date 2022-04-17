@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="https://libs.cartocdn.com/carto-vl/v1.4.4/carto-vl.min.js"></script>
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://carto.com/developers/carto-vl/v1.4.4/examples/maps/style.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.0.0/d3.min.js"></script> -->
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    
+</head>
+<body>
+    <!-- Add map container -->
+    <div>
+        <h1>
+            Just Try d3
+        </h1>
+    </div>
+    
+    <script>
+        var tempdata;
+        d3.csv("source/data/temp.csv")
+        .row(function(d) { 
+            // console.log(d)
+            return {address: d.address, value: [d.lon, d.lat]}; 
+
+        })
+        .get(function(error, rows) { 
+            console.log(rows); 
+            var aimdata=rows.filter(function(fp){
+                return fp.address === '嘉定区三里村'
+            })
+            console.log(aimdata)
+        });
+
+    </script>
+
+    <script>
+        var displayData= function(data){
+            console.log(data);
+        }
+
+        $.ajax({
+            url: "source/data/temp.json",
+            type: "GET",
+            dataType: "json",
+            success: 
+            function (data) {
+                console.log("json data")
+                displayData(data)
+            }
+        });
+
+        $(document).ready(function() {
+            $.ajax({
+                type: "GET",
+                url: "source/data/temp.csv",
+                dataType: "text",
+                success: function(data) {
+                    lines = processData(data);
+                    console.log("csv data")
+                    displayData(lines)
+                }
+            });
+        });
+
+        function processData(allText) {
+            var allTextLines = allText.split(/\r\n|\n/);
+            var headers = allTextLines[0].split(',');
+            var lines = [];
+
+            for (var i=1; i<allTextLines.length; i++) {
+                var data = allTextLines[i].split(',');
+                if (data.length == headers.length) {
+
+                    var tarr = [];
+                    for (var j=0; j<headers.length; j++) {
+                        tarr.push(headers[j]+":"+data[j]);
+                    }
+                    lines.push(tarr);
+                }
+            }
+            return lines;
+        }
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Shanghai Covid19</title>
+
+    <link rel="stylesheet" href="https://libs.cartocdn.com/airship-style/v1.0.4-rc.4/airship.css">
+    <link rel="stylesheet" href="https://libs.cartocdn.com/airship-icons/v1.0.4-rc.4/icons.css">
+
+    <!-- Include Mapbox GL from the Mapbox CDN-->
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css" rel="stylesheet" />
+    
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.min.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.css' type='text/css' />
+
+    <link href='source/css/mitTemplate.css' rel='stylesheet'/>
+    <!-- <link href='https://d33wubrfki0l68.cloudfront.net/bundles/85e46ca9df06f917ba01d3dd0e9bdf229346199e.css' rel='stylesheet'/> -->
+    <!-- <link href='d33wubrfki0l68.cloudfront.net/bundles/85e46ca9df06f917ba01d3dd0e9bdf229346199e.css' rel='stylesheet'/> -->
+
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/0.53.1/mapbox-gl.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/smoothscroll-polyfill"></script>
+
+    <script src="https://libs.cartocdn.com/carto-vl/v1.1.1/carto-vl.min.js"></script>
+
+    <!-- firebase js -->
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-auth.js"></script>
+    
+    <!-- Global site tag (gtag.js) - Google Analytics 好像没什么作用 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131292688-1"></script>
+    <script>
+        // 对象window.dataLayer（undefined 或 null）还没定义 则赋值为[]空数组, 如果定义了 就直接重新赋值
+        window.dataLayer = window.dataLayer || []; 
+        // 添加全局网站代码 (gtag.js) 
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-131292688-1');
+    </script>
+
+    <meta name="google-site-verification" content="wUGXCNe74cJtu6A-gCJhyEkbT_jRrK7McoKIZpMWu5E" />
+    <meta name="description" content="Explore inequality of places, not neighborhoods, using a tool developed at the MIT Media Lab."/>
+
+    <link href='source/css/plotTemplate.css' rel='stylesheet'/>
+    
+</head>
+
+<body class="as-app-body on-map">
+
+    <div class="as-app">
+        <!-- 顶部信息 -->
+        <header class="as-toolbar hide-in-onboarding">
+            <div href="#" class="as-toolbar__item logo">
+                <!-- <img src="https://d33wubrfki0l68.cloudfront.net/9a53347a1844996a7f77e24a267d51bb3690f96f/702af/img/atlas-of-inequality@2x.png" width="122" height="36" alt="atlas of inequality" /> -->
+                <img src="source/img/sh-covid-logo.png" width="320" height="24" alt="atlas of inequality" />
+            </div>
+            <button class='as-toolbar__item as-toolbar__toggle js-burger'>
+                <i class='as-icon-hamburguer as-title as-m--0'></i>
+            </button>
+            <nav class="as-toolbar__actions">
+                <ul>
+                    <li>
+                        <a href="index.html#" data-help="A" class="as-toolbar__item selected js-lightbox-selector">Map</a>
+                    <li>
+                        <a href="index.html#" class="as-toolbar__item js-lightbox-selector city-select" data-goto="select-city">Cities</a>
+                    </li>
+                    <li>
+                        <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#about-lightbox">About</a>
+                    </li>
+
+                </ul>
+            </nav>
+        </header>
+
+        <!-- about栏信息 -->
+        <div id="about-lightbox" class="section-lightbox js-lightbox">
+            <div class="section-content about-section">
+                <div class="heading">
+                    <h1>About</h1>
+                    <p>The Atlas of Inequality is a project from the Human
+                        Dynamics group at the <a href="https://www.media.mit.edu/" title="MIT Media Lab" target="_blank">MIT Media Lab</a> and the Department of Mathematics at <a href="http://www.uc3m.es/" title="Universidad Carlos III de Madrid" target="_blank">Universidad Carlos III de Madrid</a>.</p>
+                    <p>It is part of a broader initiative to understand
+                        human behavior in our cities and how large-scale
+                        problems like transportation, housing, segregation or
+                        inequality depend in part on the emergent patterns of
+                        people’s individual opportunities and choices.</p>
+                    <p>Comments, questions? <a href="mailto:inequality@media.mit.edu">Contact us by email</a></p>
+                    <div class="separator">
+                    </div>
+                </div>
+                <div> 
+                    <h2>Principal Investigators:</h2>
+                    <ul>
+                        <li>
+                            <div>
+                                <img src="https://d33wubrfki0l68.cloudfront.net/458e90b7824e339ebb616162d496b5110c498680/64618/img/about-esteban-moro.png" width="183" height="180" > 
+                                <p>Esteban Moro <a class="mailto" href="mailto:esteban.moroegido@gmail.com"><img src="https://d33wubrfki0l68.cloudfront.net/76a18e199fe4743088613fcc47f9519bbe3f8237/4843b/img/email_icon.svg" /></a><br /><a href="https://twitter.com/estebanmoro">@estebanmoro</a><br />MIT + UC3M</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <img src="https://d33wubrfki0l68.cloudfront.net/4d178f171713f28e5c05949bce2edbffe64b2899/50b2a/img/about-alex-pentland.png" width="181" height="181" > 
+                                <p>Alex “Sandy” Pentland<br />MIT</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div> 
+                <div> 
+                    <h2>Researchers:</h2>
+                    <ul>
+                        <li>
+                            <div>
+                                <img src="https://d33wubrfki0l68.cloudfront.net/6df40f73c407ed00118514297ecca17a0ecfcde5/be3fc/img/about-dan-calacci.png" width="181" height="179" > 
+                                <p>Dan Calacci<br /><a href="https://twitter.com/dcalacci">@dcalacci</a><br />MIT</p>
+
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <img src="https://d33wubrfki0l68.cloudfront.net/d6bd2f3f9962b69e73da037967f6215f85388bb6/14e8d/img/about-xiaowen-dong.png" width="179" height="179" > 
+                                <p>Xiaowen Dong<br />MIT + Oxford</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="separator">
+                </div>
+                <div> 
+                    <h2>Acknowledgments:</h2>
+                    <p>With thanks to:</p> 
+                </div> 
+                <ul class="acknowledgments">
+                    <li class="partner-section">
+                        <div class="image-container">
+                            <img src="https://d33wubrfki0l68.cloudfront.net/960f58b797a18a2bc5e007a573c3e71bac05cda2/cd19a/img/cuebiq-logo@2x.png" width="195" height="48" alt="cuebiq" >
+                        </div>
+                        <div class="description-container">
+                            <p>Cuebiq is a location intelligence and consumer insights company that maps and measures the offline consumer journey. Cuebiq's platform analyzes anonymous location patterns to allow researchers to glean actionable insights on human mobility. Through its <a href="https://www.cuebiq.com/about/data-for-good/" title="Data for Good Program" target="_blank">Data for Good Program</a>, Cuebiq provides access to location-based intelligence for academic research and humanitarian initiatives related to urban development, economic mobility, transportation, disaster response, and epidemiology, among other use cases.</p>
+                        </div>
+                    </li>
+                    <li class="partner-section">
+                        <div class="image-container">
+                            <img src="https://d33wubrfki0l68.cloudfront.net/2b9d289dc44fa00298773e361f6f9bd739fa5eb7/b0acd/img/carto-about-logo.svg" width="188" height="74" alt="CARTO" > 
+                        </div>
+                        <div class="description-container">   
+                            <p>From smartphones to connected cars, location data is changing the way we live and the way business happens. CARTO is the platform that turns location data into more efficient delivery routes, better behavioural marketing, strategic store placements, and much more. Business analysts, developers and data scientists use CARTO's software and data to understand where and why things happen, optimize business processes, and predict future outcomes.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <as-responsive-content class="as-app hydrated">
+            <section class="as-content">
+                <main class="as-main">
+                    <div class="as-map-area as-map-area--visible">
+                        <div id="map"></div>
+                        <a href="https://carto.com/" class="floating-carto-logo" target="_blank">
+                            <img src="https://d33wubrfki0l68.cloudfront.net/2ca7b110f4639c3bbb5c74b6ca4ce0416a4053f8/35a30/img/carto-logo.svg" alt="CARTO" />
+                        </a>
+                    </div>
+                </main>
+
+                <aside class="as-sidebar as-sidebar--left collapse-in-onboarding">
+                    <div class="as-container as-container--scrollable js-scroll">
+                        <section data-help="B" class="as-box" id="search-container"></section>
+                        <section data-help="F" class="as-box">
+                            <as-category-widget heading="小区数量" default-bar-color="#47DB99" show-clear-button="true"></as-category-widget>
+                        </section>
+                    </div>
+                </aside>
+            </section>
+        </as-responsive-content>
+        
+    </div>
+
+    <div id="popup" v-bind:style="{ display: display }">
+        <div class="popup-name" v-if="details">
+            <span><h4>Address: </h4><h3>{{ address }}</h3></span>
+            <span><h4>Name: </h4><h3>{{ name }}</h3></span>
+            <h4>Report {{reportNum}} time in {{daycount}} days</h4>
+        </div>
+        <div class="popup-inner">
+            <span class="popup-status" v-bind:style="{ backgroundColor: color }"></span>
+        </div>
+        <div class="popup-inner">
+            <div id="poi_barplot"></div>
+        </div>
+        <div class="popup-inner">
+            <h2>To be continue</h2>
+        </div>
+
+    </div>
+
+    
+    <script src="https://libs.cartocdn.com/airship-components/v1.0.4-rc.4/airship.js"></script>
+    <!-- <script src="http://d3js.org/d3.v4.min.js"></script>  -->
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+
+    <script src="source/js/main.js"></script>
+
+</body>
+</html>

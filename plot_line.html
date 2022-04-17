@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>折线图</title>
+        <style>
+            .container {
+                margin: 30px auto;
+                width: 600px;
+                height: 300px;
+                border: 1px solid #000;
+            }
+            .axis path,
+            .axis line,
+            .line {
+                stroke: #000;
+                fill: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <svg width="100%" height="100%"></svg>
+        </div>
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+        <script>
+            window.onload = function() {
+                var width = 600, height = 300;
+                // SVG画布边缘与图表内容的距离
+                var padding = { top: 50, right: 50, bottom: 50, left: 50 };
+                // 创建一个分组用来组合要画的图表元素
+                var main = d3.select('.container svg').append('g')
+                        .classed('main', true)
+                        .attr('transform', "translate(" + padding.top + ',' + padding.left + ')');
+                // 模拟数据
+                var dataset = [
+                    {x: 0, y: 11}, {x: 1, y: 35},
+                    {x: 2, y: 23}, {x: 3, y: 78},
+                    {x: 4, y: 55}, {x: 5, y: 18},
+                    {x: 6, y: 98}, {x: 7, y: 100},
+                    {x: 8, y: 22}, {x: 9, y: 65}
+                ];
+                // 创建x轴的比例尺(线性比例尺)
+                var xScale = d3.scale.linear()
+                        .domain(d3.extent(dataset, function(d) {
+                            return d.x;
+                        }))
+                        .range([0, width - padding.left - padding.right]);
+                // 创建y轴的比例尺(线性比例尺)
+                var yScale = d3.scale.linear()
+                        .domain([0, d3.max(dataset,function(d) {
+                            return d.y;
+                        })])
+                        .range([height - padding.top - padding.bottom, 0]);
+                // 创建x轴
+                var xAxis = d3.svg.axis()
+                        .scale(xScale)
+                        .orient('bottom');
+                // 创建y轴
+                var yAxis = d3.svg.axis()
+                        .scale(yScale)
+                        .orient('left');
+                // 添加SVG元素并与x轴进行“绑定”
+                main.append('g')
+                        .attr('class', 'axis')
+                        .attr('transform', 'translate(0,' + (height - padding.top - padding.bottom) + ')')
+                        .call(xAxis);
+                // 添加SVG元素并与y轴进行“绑定”
+                main.append('g')
+                        .attr('class', 'axis')
+                        .call(yAxis);
+                // 添加折线
+                var line = d3.svg.line()
+                        .x(function(d) {
+                            return xScale(d.x)
+                        })
+                        .y(function(d) {
+                            return yScale(d.y);
+                        })
+                    // 选择线条的类型
+                        .interpolate('linear');
+                // 添加path元素，并通过line()计算出值来赋值
+                main.append('path')
+                        .attr('class', 'line')
+                        .attr('d', line(dataset));
+                // 添加点
+                main.selectAll('circle')
+                        .data(dataset)
+                        .enter()
+                        .append('circle')
+                        .attr('cx', function(d) {
+                            return xScale(d.x);
+                        })
+                        .attr('cy', function(d) {
+                            return yScale(d.y);
+                        })
+                        .attr('r', 5)
+                        .attr('fill', function(d, i) {
+                            return getColor(i);
+                        });
+            };
+            function getColor(idx) {
+                var palette = [
+                    '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
+                    '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
+                    '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
+                    '#59678c', '#c9ab00', '#7eb00a', '#6f5553', '#c14089'
+                ]
+                return palette[idx % palette.length];
+            }
+        </script>
+    </body>
+</html>
