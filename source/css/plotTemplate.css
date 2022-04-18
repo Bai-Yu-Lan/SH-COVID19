@@ -9,11 +9,11 @@ body {
     shape-rendering: crispEdges;
 }
   
-.bar {
-fill: greenyellow;
+.popup_bar {
+    fill: green;
 }
-.bar:hover {
-    fill: green ;
+.popup_bar:hover {
+    fill: greenyellow ;
 }
 
 .x.axis path {
@@ -49,3 +49,11 @@ fill: greenyellow;
     left: 0;
 }
 
+.show_datetime{
+    /* background:black; */
+    color:white;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 18px;
+    font-family:"Segoe UI Black";
+}

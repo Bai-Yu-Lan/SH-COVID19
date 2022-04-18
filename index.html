@@ -59,8 +59,7 @@
         <!-- 顶部信息 -->
         <header class="as-toolbar hide-in-onboarding">
             <div href="#" class="as-toolbar__item logo">
-                <!-- <img src="https://d33wubrfki0l68.cloudfront.net/9a53347a1844996a7f77e24a267d51bb3690f96f/702af/img/atlas-of-inequality@2x.png" width="122" height="36" alt="atlas of inequality" /> -->
-                <img src="source/img/sh-covid-logo.png" width="320" height="24" alt="atlas of inequality" />
+                <img src="https://d33wubrfki0l68.cloudfront.net/9a53347a1844996a7f77e24a267d51bb3690f96f/702af/img/atlas-of-inequality@2x.png" width="122" height="36" alt="atlas of inequality" />
             </div>
             <button class='as-toolbar__item as-toolbar__toggle js-burger'>
                 <i class='as-icon-hamburguer as-title as-m--0'></i>
@@ -171,6 +170,15 @@
 
                 <aside class="as-sidebar as-sidebar--left collapse-in-onboarding">
                     <div class="as-container as-container--scrollable js-scroll">
+                        <span></span>
+                        <section>
+                            <div id="datetime" class="show_datetime">
+                                <script>
+                                    setInterval("document.getElementById('datetime').innerHTML=new Date().toLocaleString();", 1000);
+                                </script>
+                            </div>
+                        </section>
+                        
                         <section data-help="B" class="as-box" id="search-container"></section>
                         <section data-help="F" class="as-box">
                             <as-category-widget heading="小区数量" default-bar-color="#47DB99" show-clear-button="true"></as-category-widget>
@@ -201,7 +209,10 @@
     </div>
 
     
-    <script src="https://libs.cartocdn.com/airship-components/v1.0.4-rc.4/airship.js"></script>
+    <!-- <script src="https://libs.cartocdn.com/airship-components/v1.0.4-rc.4/airship.js"></script> -->
+
+    <script src="source/js/libs.cartocdn.com/airship-components/v1.0.4-rc.4/airship.js"></script>
+
     <!-- <script src="http://d3js.org/d3.v4.min.js"></script>  -->
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>

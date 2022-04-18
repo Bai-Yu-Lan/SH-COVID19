@@ -125,7 +125,8 @@ function main(){
     readTextFile(
         json_url = "source/data/CaseInfo_April/estate_info_GD.json", 
         regionRecord_url = "source/data/CaseInfo_April/Shanghai_region_data.csv",
-        csv_url = "source/data/CaseInfo_April/time_series_shanghai.csv",
+        // csv_url = "source/data/CaseInfo_April/time_series_shanghai.csv",
+        csv_url = "source/data/CaseInfo_April/time_series.csv",
         loadMap
     )
 }
@@ -161,6 +162,12 @@ function loadMap(json_data, region_data, csv_data){
 
     // 点击poi的事件
     function featureClickHandler(event){
+        let temp_item = document.getElementById('poi_barplot');
+        console.log(temp_item);
+        if (temp_item!=null){
+            temp_item.innerHTML = "";
+        }
+
         if (event.features.length < 1) {
         return;
         }
@@ -190,6 +197,7 @@ function loadMap(json_data, region_data, csv_data){
 
         if (cityPopup) {
             cityPopup.remove();
+            event.features.forEach((feature) => feature.reset());
         }
         cityPopup = new mapboxgl.Popup({
             closeButton: false,
@@ -219,8 +227,14 @@ function loadMap(json_data, region_data, csv_data){
                     var temp_d = {}
                     temp_d["date"] = key
                     temp_d["num"] = aimData[0][key]
-                    sum_count += aimData[0][key]
-                    time_log.push(temp_d)
+                    // sum_count += aimData[0][key]
+                    // time_log.push(temp_d)
+                    // TODO 从第一次通报开始显示
+                    if (key>"0318"){
+                        sum_count += aimData[0][key]
+                        time_log.push(temp_d)
+                    }
+                    
                 }
             }
             popup.reportNum = sum_count
@@ -238,20 +252,24 @@ function loadMap(json_data, region_data, csv_data){
     //点击其他区域的事件
     function featureClickOutHandler(event) {
         event.features.forEach((feature) => feature.reset());
-        document.getElementById('poi_barplot').innerHTML = "";
+        let temp_item = document.getElementById('poi_barplot');
+        // console.log(temp_item);
+        if (temp_item!=null){
+            temp_item.innerHTML = "";
+        }
         cityPopup.remove();
     }
 
     // Define Viz object and custom style
     const viz = new carto.Viz(`
         // color: ramp(zoomrange([8,11]),[white, red])
-        color: rgba(255, 0, 0, 0.5)
+        color: rgba(255, 0, 0, ramp(zoomrange([8,10,13]), [0.2,0.4,0.6]) )
         // strokeColor: ramp(zoomrange([8,12]),[red, white])
         strokeColor: rgba(255, 0, 0, 0.1)
         strokeWidth: 1
         // width: 5
         // width: ramp(zoomrange([6,13]),[0.1,8])
-        width: ramp(zoomrange([6,8,10,13]), [0.05,1,3,8])
+        width: ramp(zoomrange([8,10,13,15]), [0.05,3,9,15])
         // width: ramp(zoomrange([11,12,13,16,18]), [1,2,4,15,35])
         @address : $address
         @name: $name
@@ -324,8 +342,8 @@ function loadMap(json_data, region_data, csv_data){
         cityPopup.remove();
     }
 
-    //search 模块
-    document.getElementById("search-container").appendChild(geocoder.onAdd(map));
+    // TODO search 模块
+    // document.getElementById("search-container").appendChild(geocoder.onAdd(map));
 
     // function updateWidgets(){
     //   const histogram = viz.variables.dataHistogram.value;
@@ -409,10 +427,12 @@ function plotPOIBar(tempData){
     //     .style("text-anchor", "end");
         // .text("Value");
 
+    // svg.selectAll(".bar")
     svg.selectAll(".bar")
         .data(tempData)
         .enter().append("rect")
-        .attr("class", "bar")
+        // .attr("class", "bar")
+        .attr("class", "popup_bar")
         .attr("x", function(d) { return x(d.date); })
         .attr("width", x.rangeBand())
         .attr("y", function(d) { return y(d.num); })
