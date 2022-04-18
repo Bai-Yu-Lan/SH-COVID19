@@ -218,7 +218,6 @@ function loadMap(json_data, region_data, csv_data){
         var day_count = 0
         popup.reportNum = 0
         popup.daycount = 0
-        let flag=false
         if (!(aimData===undefined) && (aimData.length>0) ){
             for (var key in aimData[0]){
                 if(key=="address"){
@@ -231,10 +230,7 @@ function loadMap(json_data, region_data, csv_data){
                     // sum_count += aimData[0][key]
                     // time_log.push(temp_d)
                     // TODO 从第一次通报开始显示
-                    if (temp_d["num"]>0){
-                        flag=true
-                    }
-                    if (flag===true){
+                    if (key>"0318"){
                         sum_count += aimData[0][key]
                         time_log.push(temp_d)
                     }
