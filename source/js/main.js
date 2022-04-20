@@ -335,7 +335,7 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
                     // TODO 从第一次通报开始显示
                     if (temp_d["date"]>="0318"){
                         temp_d["num"] = aimData[0][key]
-                        sum_count += (aimData[0][key]>0)
+                        // sum_count += (aimData[0][key]>0)
                         // 添加barplot信息
                         time_log_bar.push(temp_d)
                     }else{
@@ -465,7 +465,7 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
         return viz.color.blendTo("@categoryRamp");
       }
       showLegend();
-      return viz.color.blendTo( "rgba(255, 0, 0, ramp(zoomrange([8,10,13]), [0.2,0.4,0.6]) )" );
+      return viz.color.blendTo( "@colorRamp" );
     });
 
 
