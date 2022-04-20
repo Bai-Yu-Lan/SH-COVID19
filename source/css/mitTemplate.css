@@ -166,7 +166,9 @@
    .segregation-legend {
     width:100%;
     height:6px;
-    background:linear-gradient(90deg,#3a3fac 0,#3a3fac 20%,#6dcee1 20%,#6dcee1 40%,#f7e432 40%,#f7e432 60%,#fd8c30 60%,#fd8c30 80%,#e93627 80%,#e93627 100%)
+    /* TODO  */
+    /* background:linear-gradient(90deg,#3a3fac 0,#3a3fac 20%,#6dcee1 20%,#6dcee1 40%,#f7e432 40%,#f7e432 60%,#fd8c30 60%,#fd8c30 80%,#e93627 80%,#e93627 100%) */
+    background:linear-gradient(90deg,rgb(109, 206, 225) 0%, rgb(109, 206, 225) 25%,rgb(247, 228, 50) 25%, rgb(247, 228, 50) 50%,  rgb(255, 165, 0) 50%, rgb(255, 165, 0) 75%,rgb(220,20,60) 75%,rgb(220,20,60) 100%)
    }
    .legend-text {
     font-size:16px

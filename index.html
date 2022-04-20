@@ -59,7 +59,8 @@
         <!-- 顶部信息 -->
         <header class="as-toolbar hide-in-onboarding">
             <div href="#" class="as-toolbar__item logo">
-                <img src="https://d33wubrfki0l68.cloudfront.net/9a53347a1844996a7f77e24a267d51bb3690f96f/702af/img/atlas-of-inequality@2x.png" width="122" height="36" alt="atlas of inequality" />
+                <!-- <img src="https://d33wubrfki0l68.cloudfront.net/9a53347a1844996a7f77e24a267d51bb3690f96f/702af/img/atlas-of-inequality@2x.png" width="122" height="36" alt="atlas of inequality" /> -->
+                <img src="source/img/baiyulan_logo.png" width="70" height="55"/>
             </div>
             <button class='as-toolbar__item as-toolbar__toggle js-burger'>
                 <i class='as-icon-hamburguer as-title as-m--0'></i>
@@ -68,17 +69,75 @@
                 <ul>
                     <li>
                         <a href="index.html#" data-help="A" class="as-toolbar__item selected js-lightbox-selector">Map</a>
+                    </li>
                     <li>
-                        <a href="index.html#" class="as-toolbar__item js-lightbox-selector city-select" data-goto="select-city">Cities</a>
+                        <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#hosp-lightbox">Hospitals</a>
+                    </li>
+                    <li>
+                        <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#datas-lightbox">Data</a>
+                    </li> 
+                    <li>
+                        <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#simulation-lightbox">Simulation</a>
                     </li>
                     <li>
                         <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#about-lightbox">About</a>
                     </li>
-
                 </ul>
             </nav>
         </header>
 
+        <!-- Hospital栏信息 -->
+        <div id="hosp-lightbox" class="section-lightbox js-lightbox">
+            
+            <div class="as-map-area as-map-area--visible" style="height: 100%;width: 100%;">
+                <div id="hospMain" style="height: 100%;width: 100%;"></div>
+            </div>
+        </div>
+
+        <!-- Datas栏信息 -->
+        <div id="datas-lightbox" class="section-lightbox js-lightbox">
+            <div class="section-content datas-section">
+                <div class="heading">
+                    <h1>Methods</h1>
+                    <p>How do we calculate place inequality?</p>
+                    <div class="separator">
+                    </div>
+                </div>
+                <ol> 
+                    <li> 
+                        <h2>Data</h2>
+                        <p>Our anonymous data contains billions of visits to
+                            locations in the Boston Metro Area from October
+                            2016 to March 2017. We analyze mobility patterns of about 150,000 anonymous users, provided through <a href="https://www.cuebiq.com/about/data-for-good/">Cuebiq’s Data for Good initiative</a>, in the whole Boston Metro area (around 3% of the population). MIT Media Lab coupled Cuebiq's anonymous location data with census information to determine user income groups and identify user visitation patterns to places.
+                            We use the census-based <a href="https://en.wikipedia.org/wiki/Core-based_statistical_area" title="Wikipedia Core-based statistical areas">core-based statistical areas</a>
+s                                to define metro areas. This definition encompasses
+                            the cities, suburbs, and commuting zones that are
+                            economically tied to a central city of interest.
+                            In the Boston case, it contains large areas in New
+                            Hampshire and down the Massachusetts coast. 
+                                Finally, we have used the public Foursquare API to get the list of the 30,000 places that users visit.</p> 
+                    </li> 
+                </ol>
+            </div>
+        </div>
+
+        <!-- simulation栏信息 -->
+        <div id="simulation-lightbox" class="section-lightbox js-lightbox">
+            <div class="section-content simulation-section">
+                <div class="heading">
+                    <h1>Simulations</h1>
+                    <p>How do we simulate the spread of covid-19?</p>
+                    <div class="separator">
+                    </div>
+                </div>
+                <ol>
+                    <li>
+                        <h2>Brief summary</h2>
+                        <p>XXXXXXXXXXXXXXXXXXX</p>
+                    </li>
+                </ol>
+            </div>
+        </div>
         <!-- about栏信息 -->
         <div id="about-lightbox" class="section-lightbox js-lightbox">
             <div class="section-content about-section">
@@ -162,6 +221,18 @@
                 <main class="as-main">
                     <div class="as-map-area as-map-area--visible">
                         <div id="map"></div>
+                        
+                        <div class="legend legend-panel js-legend hide-in-onboarding">
+                            <div class="widgets-item legend-inner">
+                                <h2 class="as-body as-font--medium legend-text">Risk index</h2>
+                                <div class="segregation-legend as-mt--8"></div>
+                                <div class="labels-legend as-mt--4">
+                                    <span class="as-caption">Low Risk</span>
+                                    <span class="as-caption">High Risk</span>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <a href="https://carto.com/" class="floating-carto-logo" target="_blank">
                             <img src="https://d33wubrfki0l68.cloudfront.net/2ca7b110f4639c3bbb5c74b6ca4ce0416a4053f8/35a30/img/carto-logo.svg" alt="CARTO" />
                         </a>
@@ -180,7 +251,16 @@
                         </section>
                         
                         <section data-help="B" class="as-box" id="search-container"></section>
-                        <section data-help="F" class="as-box">
+                        <section data-help="C" class="as-box" id="regionPlot">
+                            <div class="aside_text" v-if="details">
+                                <b>{{district}}</b> 新增人数变化
+                            </div>
+                            <section id="region_num_plot"></section>
+                        </section>
+                        <section data-help="D" class="as-box">
+                            <as-switch label="Color by category" ></as-switch>
+                        </section>
+                        <section data-help="E" class="as-box">
                             <as-category-widget heading="小区数量" default-bar-color="#47DB99" show-clear-button="true"></as-category-widget>
                         </section>
                     </div>
@@ -188,6 +268,18 @@
             </section>
         </as-responsive-content>
         
+        <footer class="footer hide-in-onboarding">
+            <div class="orgs">
+                <a href="https://www.media.mit.edu/groups/human-dynamics/overview/" class="as-toolbar__item" target="_blank"><img src="https://d33wubrfki0l68.cloudfront.net/91f555da4bb714f0a605c8d15c4818ddc4416643/3ce45/img/human-dynamics-logo.svg" alt="human dynamics" /></a>
+                <a href="https://www.media.mit.edu/" class="as-toolbar__item" target="_blank"><img src="https://d33wubrfki0l68.cloudfront.net/40b33abc6e3bc979e9d59b8e72bee14e59e0e514/e1f0c/img/mit-logo.svg" alt="MIT media lab" /></a>
+                <a href="https://www.uc3m.es/Home" class="as-toolbar__item" target="_blank"><img src="https://d33wubrfki0l68.cloudfront.net/6b5ee28d3ab6d9bcb10892debca620f1056fbcaf/35afa/img/logo-uc3m@2x.png" width="44" height="14" alt="Universidad Carlos III" /></a>
+            </div>
+            <div class="social">
+                <a href="https://www.instagram.com/mitmedialab/?hl=en" target="_blank" class="as-toolbar__item"><img src="https://d33wubrfki0l68.cloudfront.net/101c5e5129051a365661cb23674184fef56ec35d/99787/img/instagram_icon.svg" alt="instagram" /></a>
+                <a href="https://twitter.com/share?text=The%20Atlas%20of%20Inequality&url=https%3a%2f%2finequality.media.mit.edu" target="_blank" class="as-toolbar__item"><img src="https://d33wubrfki0l68.cloudfront.net/289ad1795214c0b91d6fcb5cca0a28a5e78cc6e4/c2fff/img/twitter_icon.svg" alt="twitter" /></a>
+            </div>
+        </footer>
+
     </div>
 
     <div id="popup" v-bind:style="{ display: display }">
@@ -198,6 +290,9 @@
         </div>
         <div class="popup-inner">
             <span class="popup-status" v-bind:style="{ backgroundColor: color }"></span>
+        </div>
+        <div class="popup-inner">
+            <div id="poi_lineplot" class="popup_text"></div>
         </div>
         <div class="popup-inner">
             <div id="poi_barplot"></div>
@@ -218,6 +313,7 @@
     <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 
     <script src="source/js/main.js"></script>
+    <script src="source/js/hospital_map.js"></script>
 
 </body>
 </html>

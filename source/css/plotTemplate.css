@@ -7,13 +7,43 @@ body {
     fill: none;
     stroke: orange;
     shape-rendering: crispEdges;
+    stroke-width: 2;
 }
-  
+
+.popup_line{
+    fill: none;
+    stroke: green;
+    stroke-width: 1.5;
+    shape-rendering: crispEdges;
+}
+.popup_point{
+    fill: red;
+    r: 3;
+}
+
 .popup_bar {
     fill: green;
 }
 .popup_bar:hover {
     fill: greenyellow ;
+}
+
+.aside_line{
+    fill: none;
+    stroke: green;
+    stroke-width: 1.5;
+    shape-rendering: crispEdges;
+}
+.aside_point{
+    fill: orangered;
+    r: 2.5;
+}
+.aside_axis path,
+.aside_axis line {
+    fill: none;
+    stroke: orange;
+    shape-rendering: crispEdges;
+    stroke-width: 1.5;
 }
 
 .x.axis path {
@@ -27,6 +57,7 @@ body {
     background: rgba(0, 0, 0, 0.8);
     color: #fff;
     border-radius: 2px;
+    z-index: 9999;
 }
 
 /* Creates a small triangle extender for the tooltip */
@@ -40,6 +71,7 @@ body {
     content: "\25BC";
     position: absolute;
     text-align: center;
+    z-index: 9999;
 }
 
 /* Style northward tooltips differently */
@@ -47,6 +79,7 @@ body {
     margin: -1px 0 0 0;
     top: 100%;
     left: 0;
+    z-index: 9999;
 }
 
 .show_datetime{
@@ -56,4 +89,19 @@ body {
     vertical-align: middle;
     font-size: 18px;
     font-family:"Segoe UI Black";
+}
+
+.aside_text{
+    color:white;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 14px;
+    font-family:"微软雅黑";
+}
+
+.popup_text{
+    color:white;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 15px;
 }
