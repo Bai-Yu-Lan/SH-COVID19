@@ -1,7 +1,7 @@
 * {
     margin:0;
     padding:0;
-    --yellow:#FFD447;
+    --yellow:#60D2F4;
     --black:#212121
    }
    body.as-app-body {
@@ -159,6 +159,10 @@
     width:250px;
     border-radius:4px
    }
+   .legend-panel-c {
+    width:150px;
+    border-radius:4px
+   }
    .legend-inner {
     border:none;
     padding:12px
@@ -177,6 +181,7 @@
     display:flex;
     font-size:10px;
     justify-content:space-between;
+    /* justify-content:space-evenly; */
     width:100%
    }
    .floating-carto-logo {
@@ -383,8 +388,8 @@
     padding:8px 18px 0 18px
    }
    header .selected {
-    border-bottom:4px solid #ffd447;
-    color:#ffd447
+    border-bottom:4px solid #60D2F4;
+    color:#60D2F4
    }
    header nav .help-close-icon,
    header nav .help-icon {
@@ -440,7 +445,7 @@
      z-index:10
     }
     .as-sidebar {
-     width:300px;
+     width:360px;
      margin-top:60px;
      padding-bottom:110px
     }
@@ -605,10 +610,10 @@
     font-weight:700
    }
    .color {
-    color:#ffd447
+    color:#60D2F4
    }
    .modal-content .as-btn--primary {
-    background-color:#ffd447;
+    background-color:#60D2F4;
     color:#1d1a2f;
     display:flex
    }
@@ -929,7 +934,7 @@
     display:block;
     width:225px;
     padding:15px 0;
-    background-color:#ffd447;
+    background-color:#60D2F4;
     box-shadow:0 5px 10px rgba(0,0,0,.1);
     color:#212121;
     font:700 18px/1 Lato,sans-serif;
@@ -1042,7 +1047,7 @@
    .section-content {
     margin-left:222px;
     width:calc(100vw - 300px);
-    max-width:752px;
+    max-width:852px;
     padding:60px 0 130px 0
    }
    .section-content h1 {
@@ -1071,7 +1076,7 @@
     padding-top:10px
    }
    .section-content p a {
-    color:#ffd447;
+    color:#60D2F4;
     text-decoration:none
    }
    .section-content p a:hover {
@@ -1128,7 +1133,7 @@
     margin-bottom:16px
    }
    .about-section li {
-    flex:0 0 50%;
+    flex:0 0 25%;
     flex-direction:column
    }
    .about-section li div {
@@ -1311,7 +1316,7 @@
    }
    .bubble-container-sidebar li .bubble-button {
     position:absolute;
-    right:260px
+    right:320px
    }
    .bubble-container-sidebar li .bubble-info {
     padding:8px;

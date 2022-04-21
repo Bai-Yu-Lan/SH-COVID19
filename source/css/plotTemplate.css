@@ -5,14 +5,14 @@ body {
 .axis path,
 .axis line {
     fill: none;
-    stroke: orange;
+    stroke: #B6E3F0;
     shape-rendering: crispEdges;
     stroke-width: 2;
 }
 
 .popup_line{
     fill: none;
-    stroke: green;
+    stroke: #60D2F4;
     stroke-width: 1.5;
     shape-rendering: crispEdges;
 }
@@ -22,20 +22,20 @@ body {
 }
 
 .popup_bar {
-    fill: green;
+    fill: #4b93cf;
 }
 .popup_bar:hover {
-    fill: greenyellow ;
+    fill: #a1e7f7 ;
 }
 
 .aside_line{
     fill: none;
-    stroke: green;
+    stroke: #60D2F4;
     stroke-width: 1.5;
     shape-rendering: crispEdges;
 }
 .aside_point{
-    fill: orangered;
+    fill: #0BCAF7ed;
     r: 2.5;
 }
 .aside_axis path,
@@ -88,15 +88,17 @@ body {
     text-align: center;
     vertical-align: middle;
     font-size: 18px;
-    font-family:"Segoe UI Black";
+    /* font-family:"Segoe UI Black"; */
+
 }
 
 .aside_text{
     color:white;
     text-align: left;
     vertical-align: middle;
-    font-size: 14px;
-    font-family:"微软雅黑";
+    font-size: 16px;
+    margin-top: 10px;
+    /* font-family:"微软雅黑"; */
 }
 
 .popup_text{
@@ -104,4 +106,50 @@ body {
     text-align: center;
     vertical-align: middle;
     font-size: 15px;
+}
+
+.point-mark {
+    width: 12px;
+    height: 12px;
+    align-self: center;
+    border-radius: 50%;
+    margin-right: 12px;
+    margin-top: 2px;
+    box-sizing: border-box;
+    display: inline-block;
+}
+
+.category-legend{
+    flex-direction: row;
+}
+.category-legend li{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    list-style-type: none;
+    list-style: none;
+}
+
+
+.tooltip {
+    position: absolute;
+    line-height: 1;
+    /* font-weight: bold; */
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+    z-index: 9999;
+}
+
+.tooltip p {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: .5em 1em;
+    font-size: 12px;
+    line-height: 17px;
+    color: rgba(255,255,255,1);
+}
+
+.tooltipHeader {
+    font-weight: 700;
+    font-size: 12.5px;
 }
