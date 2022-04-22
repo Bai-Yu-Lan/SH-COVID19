@@ -325,6 +325,8 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
         // console.log(!(aimData===undefined) && (aimData.length>0))
 
         var time_log_bar = []
+        const ticks_index = [1,7,14,21] // 显示的日期
+        var tick_values = []
         var time_log_line = []
         let line_sum_num = 0
         var sum_count = 0 //小区这几天被通报的总次数
@@ -334,22 +336,31 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
         popup.daycount = 0
         if (!(aimData===undefined) && (aimData.length>0) ){
             let day_num = Object.keys(aimData[0]).length
+            // console.log("Keys:")
+            // console.log(Object.keys(aimData[0]))
+            let start_i = day_num-21 // TODO 仅保留21天的数据
+            let count = 0
             let i=0
             for (var key in aimData[0]){
                 i+=1
-                if(key=="encode"){ // TODO 
+                if(key=="encode"){ 
                     continue
-                }else if (i>day_num-21){
+                }else if (i>start_i){ 
                     day_count+=1
                     var temp_d = {}
                     temp_d["date"] = key
                     // time_log_bar.push(temp_d)
                     // TODO 从第一次通报开始显示
                     if (temp_d["date"]>="0318"){
+                        count+=1 
                         temp_d["num"] = (aimData[0][key]>0) ? 1: 0
                         sum_count += (aimData[0][key]>0)
                         // 添加barplot信息
                         time_log_bar.push(temp_d)
+                        if (ticks_index.includes(count)){
+                            console.log("count is: "+ count + "; Key is: "+key)
+                            tick_values.push(key) //TODO 添加需要保存显示的日期
+                        }
                     }else{
                         line_sum_num += aimData[0][key]
                         temp_d["num"] = line_sum_num
@@ -361,14 +372,16 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
             }
             popup.reportNum = sum_count
             popup.daycount = day_count
+            console.log("tickValues are : ")
+            console.log(tick_values)
             // 绘制折线图
-            plotPOIBar(time_log_bar)
-
-            if (line_sum_num > 0){
-                plotPOILine(tempData=time_log_line)
-            }else{
-                console.log("line plot num is: "+ line_sum_num)
-            }
+            plotPOIBar(time_log_bar, tick_values)
+            // TODO 取消绘制折线图
+            // if (line_sum_num > 0){
+            //     plotPOILine(tempData=time_log_line)
+            // }else{
+            //     console.log("line plot num is: "+ line_sum_num)
+            // }
         }
 
         // console.log("Plot "+ popup.district)
@@ -407,7 +420,7 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
         // rgb(109, 206, 225), rgb(247, 228, 50), rgb(255, 165, 0), rgb(220,20,60)
         @colorRamp: ramp(buckets($last_update_weight, [2,8,14]), [rgba(220,20,60,ramp(zoomrange([8,12]), [0.3,0.8])), rgba(255,165,0,ramp(zoomrange([8,12]), [0.3,0.7])), rgba(247,228,50,ramp(zoomrange([8,12]), [0.3,0.7])), rgb(109,206,225,ramp(zoomrange([8,12]), [0.3,0.7]))] )
         color:@colorRamp
-        strokeColor: rgba(255, 0, 0, 0.1)
+        strokeColor: @colorRamp
         strokeWidth: 1
         @width_weight: $width_weight
         // width: ramp(zoomrange([8,10,13,15]), [0.05,3,9,15])
@@ -511,15 +524,11 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
 main();
 
 
-function plotPOIBar(tempData){
-    // var margin = {top: 40, right: 20, bottom: 30, left: 40},
-    var margin = {top: 5, right: 3, bottom: 5, left: 3},
-
-    // width = 660 - margin.left - margin.right,
-    // height = 400 - margin.top - margin.bottom;
+function plotPOIBar(tempData, tick_values){
+    var margin = {top: 5, right: 6, bottom: 15, left: 6},
 
     width = 240 - margin.left - margin.right,
-    height = 80 - margin.top - margin.bottom;
+    height = 90 - margin.top - margin.bottom;
 
     var formatPercent = d3.format(".0%");
 
@@ -531,18 +540,21 @@ function plotPOIBar(tempData){
 
     var xAxis = d3.svg.axis()
         .scale(x)
+        .outerTickSize(0)
+        .tickValues(tick_values)
         .orient("bottom");
 
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
-        .tickFormat(formatPercent);
+    // var yAxis = d3.svg.axis()
+    //     .scale(y)
+    //     .orient("left")
+    //     .tickFormat(formatPercent);
 
     var tip = d3.tip()
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html(function(d) {
-        return "<strong>" + d.date + "</strong> : <span style='color:red'><strong>" + d.num + "</strong></span>";
+        // return "<strong>" + d.date + "</strong> : <span style='color:red'><strong>" + d.num + "</strong></span>";
+        return "<strong>" + d.date + "</strong>";
     })
 
     var svg = d3.select("#poi_barplot").append("svg")
@@ -559,8 +571,8 @@ function plotPOIBar(tempData){
     y.domain([0, 1.2])
 
     svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + (height-8) + ")")
         .call(xAxis);
 
     // svg.append("g")
@@ -576,21 +588,19 @@ function plotPOIBar(tempData){
     // svg.selectAll(".bar")
     svg.selectAll(".bar")
         .data(tempData)
-        .enter().append("rect")
+        .enter()
+        .append("rect")
         // .attr("class", "bar")
-        .attr("class", "popup_bar")
-        .attr("x", function(d) { return x(d.date); })
-        .attr("width", x.rangeBand())
-        .attr("y", function(d) { return y(d.num); })
-        .attr("height", function(d) { return height - y(d.num); })
-        .on('mouseover', tip.show)
-        .on('mouseout', tip.hide)
+            .attr("class", "popup_bar")
+            .attr("x", function(d) { return x(d.date); })
+            .attr("width", x.rangeBand())
+            .attr("y", function(d) { return y(d.num); })
+            .attr("height", function(d) { return height - y(d.num)-8; })
+            .attr('rx',3)
+            .attr('ry',3)
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide)
 
-
-    function type(d) {
-        d.num = +d.num;
-        return d;
-    }
 }
 
 function plotPOILine(tempData){
@@ -608,6 +618,7 @@ function plotPOILine(tempData){
         .domain([0, 1.1 * d3.max(tempData, function(d) { return d.num; })]);
     var xAxis = d3.svg.axis()
         .scale(xScale)
+        .outerTickSize(0)
         .orient("bottom");
     var yAxis = d3.svg.axis()
         .scale(yScale)
@@ -715,6 +726,7 @@ function plotRegionLine(allRegionData, regionName){
             .domain([0, 1.1 * d3.max(tempData, function(d) { return d.num; })]);
         var xAxis = d3.svg.axis()
             .scale(xScale)
+            .outerTickSize(0)
             .orient("bottom");
         var yAxis = d3.svg.axis()
             .scale(yScale)
@@ -834,10 +846,11 @@ function plotStackedBar(tempData, div_id, category_list, temp_w=270, temp_h=80){
     var color = d3.scale.ordinal().range(["#4b93cf", "#a1e7f7"]); // "#ffcc00"
 
     var xAxis = d3.svg.axis()
-    .scale(xScale)
-    .orient("up")
-    .innerTickSize([0])
-    .tickFormat(function(d) { return "" }); //设置不显示内容
+        .scale(xScale)
+        .orient("up")
+        .outerTickSize(0)
+        .innerTickSize([0])
+        .tickFormat(function(d) { return "" }); //设置不显示内容
 
     var yAxis = d3.svg.axis()
     .scale(yScale)
@@ -878,11 +891,14 @@ function plotStackedBar(tempData, div_id, category_list, temp_w=270, temp_h=80){
         .style("fill", function(d, i) { return color(i); });
 
     var rectangles = address.selectAll("rect")
-    .data(function(d) {
-    // console.log("array for a rectangle");
-    return d; })  // this just gets the array for bar segment.
-    .enter().append("rect")
-    .attr("width", xScale.rangeBand());
+        .data(function(d) {
+        // console.log("array for a rectangle");
+        return d; })  // this just gets the array for bar segment.
+        .enter()
+        .append("rect")
+            // .attr("rx", 3)
+            // .attr("ry", 3)
+            .attr("width", xScale.rangeBand());
 
     // var tooltip = d3.tip()
     //     .attr('class', 'd3-tip')
