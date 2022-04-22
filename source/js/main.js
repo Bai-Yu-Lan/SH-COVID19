@@ -53,7 +53,8 @@ const geocoder = new MapboxGeocoder({
 });
 
 function readTextFile(json_url, regionRecord_url, csv_url,  main_function) {
-    console.log("Reading GeoJson File...");
+    // 读取POI基本信息
+    console.log("Reading GeoJson File...")
     $.ajax({
         url: json_url,
         type: "GET",
@@ -66,7 +67,7 @@ function readTextFile(json_url, regionRecord_url, csv_url,  main_function) {
 }
 
 function readRegionCSVFile(regionRecord_url, csv_url, json_data, main_function){
-    // 读取各个区的统计信息
+    // 读取各个区的统计信息 regionRecord_url=Shanghai_region_data_T.csv
     console.log("Reading region data...")
 
     $.ajax({
@@ -79,13 +80,37 @@ function readRegionCSVFile(regionRecord_url, csv_url, json_data, main_function){
             readCSVFile(csv_url, json_data, region_data, main_function)
         }
     });
+    // 处理region csv数据
+    function processData(allText) {
+        console.log("Proecssing Region CSV Data...")
+        var allTextLines = allText.split(/\r\n|\n/);
+        var headers = allTextLines[0].split(',');
+        var lines = [];
+
+        for (var i=1; i<allTextLines.length; i++) {
+            var data = allTextLines[i].split(',');
+            if (data.length == headers.length) {
+
+                var tarr = {};
+                for (var j=0; j<headers.length; j++) {
+                    if (headers[j] == "address"){
+                        tarr[headers[j]] = data[j];
+                    }else{
+                        tarr[headers[j]] = parseFloat(data[j]);
+                    }
+                    
+                }
+                lines.push(tarr);
+            }
+        }
+        return lines;
+    }
 }
 
 
 function readCSVFile(csv_url, json_data, region_data, callback){
-    
-    // 读取存储通报信息的csv
-    console.log("Reading address report data...")
+    // 读取存储通报信息的csv csv_url=time_series.csv
+    console.log("Reading encode address report data...")
     $.ajax({
         url: csv_url,
         type: "GET",
@@ -122,8 +147,8 @@ function readCSVFile(csv_url, json_data, region_data, callback){
                 var report_num = 0; //小区被通报的次数
                 var freq = 0;
                 for (var j=0; j<headers.length; j++) {
-                    if (headers[j] == "address"){
-                        var poi_address = data[j]
+                    if (headers[j] == "encode"){
+                        var poi_encode = data[j]+"" // TODO 确保encode是string
                         temp_poi_data["last_update_weight"] = 0
                         tarr[headers[j]] = data[j];
                     }else{
@@ -144,7 +169,7 @@ function readCSVFile(csv_url, json_data, region_data, callback){
                 }
                 csv_data.push(tarr);
                 temp_poi_data["report_num"] = report_num
-                poi_info_dict[poi_address] = temp_poi_data
+                poi_info_dict[poi_encode] = temp_poi_data
             }
         }
         // console.log("IN FUNCTION")
@@ -158,31 +183,7 @@ function readCSVFile(csv_url, json_data, region_data, callback){
     }
 }
 
-// 处理region csv数据
-function processData(allText) {
-    console.log("Proecssing Region CSV Data...")
-    var allTextLines = allText.split(/\r\n|\n/);
-    var headers = allTextLines[0].split(',');
-    var lines = [];
 
-    for (var i=1; i<allTextLines.length; i++) {
-        var data = allTextLines[i].split(',');
-        if (data.length == headers.length) {
-
-            var tarr = {};
-            for (var j=0; j<headers.length; j++) {
-                if (headers[j] == "address"){
-                    tarr[headers[j]] = data[j];
-                }else{
-                    tarr[headers[j]] = parseFloat(data[j]);
-                }
-                
-            }
-            lines.push(tarr);
-        }
-    }
-    return lines;
-}
 
 
 
@@ -191,9 +192,7 @@ function main(){
 
     readTextFile(
         json_url = "source/data/CaseInfo_April/estate_info_POI_category.json", 
-        // json_url = "source/data/CaseInfo_April/estate_info_GD_startTime.json", 
         regionRecord_url = "source/data/CaseInfo_April/Shanghai_region_data_T.csv",
-        // csv_url = "source/data/CaseInfo_April/time_series_shanghai.csv",
         csv_url = "source/data/CaseInfo_April/time_series.csv",
         loadMap
     )
@@ -203,19 +202,19 @@ function updateGeojson(json_data, poi_info_dict, min_w, max_w){
     console.log("Updating GeoJson file...")
     for(var i=0;i<json_data.features.length;i++){
     // for(var i=0;i<2;i++){
-        temp_address = json_data.features[i].properties.address
-        if ( poi_info_dict.hasOwnProperty(temp_address) ) {
-            temp_last_update_weight = poi_info_dict[temp_address].last_update_weight
+        temp_encode = json_data.features[i].properties.encode
+        if ( poi_info_dict.hasOwnProperty(temp_encode) ) {
+            temp_last_update_weight = poi_info_dict[temp_encode].last_update_weight
             // temp_last_update_weight = (temp_last_update_weight-min_w)/(max_w-min_w)
             temp_last_update_weight = (max_w - temp_last_update_weight)
-            temp_last_update_date = poi_info_dict[temp_address].last_update_date
+            temp_last_update_date = poi_info_dict[temp_encode].last_update_date
             json_data.features[i].properties.last_update_weight = temp_last_update_weight
             json_data.features[i].properties.last_update_date = temp_last_update_date
             // report num
-            json_data.features[i].properties.width_weight = 1+ Math.sqrt(poi_info_dict[temp_address].report_num)
+            json_data.features[i].properties.width_weight = 1+ Math.sqrt(poi_info_dict[temp_encode].report_num)
             
         }else{
-            // console.log(temp_address)
+            // console.log(temp_encode)
             json_data.features[i].properties.last_update_weight = 0
             json_data.features[i].properties.last_update_date = "Nan"
             json_data.features[i].properties.width_weight = 1
@@ -318,10 +317,11 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
             .addTo(map)
 
         var aimData = csv_data.filter(function(d){
-            return d.address === feature.variables.address.value
+            // return d.address === feature.variables.address.value
+            return d.encode === feature.variables.encode.value // TODO 查找对应数据
         })
-        // console.log("aimData is: ")
-        // console.log(aimData)
+        console.log("aimData is: ")
+        console.log(aimData)
         // console.log(!(aimData===undefined) && (aimData.length>0))
 
         var time_log_bar = []
@@ -337,7 +337,7 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
             let i=0
             for (var key in aimData[0]){
                 i+=1
-                if(key=="address"){
+                if(key=="encode"){ // TODO 
                     continue
                 }else if (i>day_num-21){
                     day_count+=1
@@ -346,7 +346,7 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
                     // time_log_bar.push(temp_d)
                     // TODO 从第一次通报开始显示
                     if (temp_d["date"]>="0318"){
-                        temp_d["num"] = aimData[0][key]
+                        temp_d["num"] = (aimData[0][key]>0) ? 1: 0
                         sum_count += (aimData[0][key]>0)
                         // 添加barplot信息
                         time_log_bar.push(temp_d)
@@ -362,8 +362,6 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
             popup.reportNum = sum_count
             popup.daycount = day_count
             // 绘制折线图
-            // console.log("Ready to plot bar")
-            // console.log(time_log_bar)
             plotPOIBar(time_log_bar)
 
             if (line_sum_num > 0){
@@ -372,12 +370,13 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
                 console.log("line plot num is: "+ line_sum_num)
             }
         }
+
         // console.log("Plot "+ popup.district)
         // plotRegionLine(
         //     allRegionData=region_data,
         //     regionName=popup.district
         // )
-        plotSideStackedBars("上海市", null, 260, 80)
+        plotSideStackedBars("上海市", null, 320, 80)
 
     }
     
@@ -396,7 +395,7 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
         if (aside_info.district!="上海市"){
             aside_info.district = "上海市"
             // plotRegionLine(region_data, "上海市") //TODO 绘制上海市折线图
-            plotSideStackedBars("上海市", null, 260, 80)
+            plotSideStackedBars("上海市", null, 320, 80)
         }
 
     }
@@ -465,7 +464,7 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
     interactivity.on("featureClickOut", featureClickOutHandler)
 
     // plotRegionLine(region_data, "上海市") //TODO 初始化绘制
-    plotSideStackedBars("上海市", null, 260, 80)
+    plotSideStackedBars("上海市", null, 320, 80)
 
     function updateWidgets(){
         districtWidget.style.display = "block";
@@ -831,6 +830,7 @@ function plotStackedBar(tempData, div_id, category_list, temp_w=270, temp_h=80){
     var yScale = d3.scale.linear()
     .rangeRound([height, 0]);
 
+    // var color = d3.scale.ordinal().range(["#ff6600", "#ffb380"]); // "#ffcc00"
     var color = d3.scale.ordinal().range(["#4b93cf", "#a1e7f7"]); // "#ffcc00"
 
     var xAxis = d3.svg.axis()
@@ -872,10 +872,10 @@ function plotStackedBar(tempData, div_id, category_list, temp_w=270, temp_h=80){
     //     .text("Num");
 
     var address = svg.selectAll(".address")
-    .data(stacked)
-    .enter().append("g")
-    .attr("class", "address")
-    .style("fill", function(d, i) { return color(i); });
+        .data(stacked)
+        .enter().append("g")
+        .attr("class", "address")
+        .style("fill", function(d, i) { return color(i); });
 
     var rectangles = address.selectAll("rect")
     .data(function(d) {

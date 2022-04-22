@@ -58,7 +58,7 @@
 </head>
 
 <body class="as-app-body on-map">
-
+    
     <div class="as-app">
         <!-- 顶部信息 -->
         <header class="as-toolbar hide-in-onboarding">
@@ -185,14 +185,14 @@ s                                to define metro areas. This definition encompas
                             <div>
                                 <img src="source/img/photo/yxu.png" width="100" height="140" > 
                                 <p><a href="http://humnetlab.berkeley.edu/~yxu/" title="Yanyan Xu" target="_blank">Yanyan Xu</a><br /> 
-                                    AI Institute, SJTU 
+                                    Baiyulan Open AI &<br />AI Institute, SJTU 
                                 </p>
                             </div>
                         </li>
                         <li>
                             <div>
                                 <img src="source/img/photo/yhjin.png" width="100" height="140" > 
-                                <p>Yaohui Jin<br />Baiyulan Open AI<br />AI Institute, SJTU</p>
+                                <p>Yaohui Jin<br />Baiyulan Open AI &<br />AI Institute, SJTU</p>
                             </div>
                         </li>
                         <li>
@@ -331,12 +331,17 @@ s                                to define metro areas. This definition encompas
                 </main>
 
                 <aside class="as-sidebar as-sidebar--left collapse-in-onboarding">
-                    <div class="as-container as-container--scrollable js-scroll">
+                    <div class="as-container as-container--scrollable js-scroll" style="width: 360;">
                         <span></span>
                         <section style="margin-top:25px">
                             <div id="datetime" class="show_datetime">
                                 <script>
-                                    setInterval("document.getElementById('datetime').innerHTML=new Date().toLocaleString();", 1000);
+                                    t_div = document.getElementById('datetime')
+                                    var now_date = new Date()
+                                    t_div.innerHTML = "数据更新日期： "+now_date.getFullYear()+"年"
+                                            +(now_date.getMonth()+1)+"月"
+                                            +(now_date.getDate())+"日"
+                                    // setInterval("document.getElementById('datetime').innerHTML=new Date().toLocaleString();", 1000);
                                 </script>
                             </div>
                         </section>
@@ -420,7 +425,7 @@ s                                to define metro areas. This definition encompas
     <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 
     <script src="source/js/main.js"></script>
-    <!-- <script src="source/js/hospital_map.js"></script> -->
+    <script src="source/js/hospital_map.js"></script>
 
 </body>
 </html>
