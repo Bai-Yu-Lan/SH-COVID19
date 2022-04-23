@@ -7,7 +7,6 @@ carto.setDefaultAuth({
 });
 
 const zoom = 9;
-var cityPopup
 
 var districtName={
     "上海市":"Shanghai",
@@ -28,6 +27,18 @@ var districtName={
     "金山区": "Jinshan",
     "崇明区": "Chongming"
 }
+
+// 记录POI位置信息的json 
+var json_url = "source/data/CaseInfo_April/estate_info_POI_category.json";
+// 各个区域新增病例信息 
+var regionRecord_url = "source/data/CaseInfo_April/Shanghai_region_data_T.csv";
+// 医疗资源占用情况
+var hospital_occupy_url = "source/data/CaseInfo_April/yiliao.csv"
+//社会面筛查信息
+var society_newCase_url = "source/data/CaseInfo_April/shehuimian.csv"
+// 各个POI新增病例信息 
+var csv_url = "source/data/CaseInfo_April/time_series.csv";
+
 
 // 定义地图背景
 let map = new mapboxgl.Map({
@@ -58,7 +69,8 @@ const geocoder = new MapboxGeocoder({
     placeholder: "Search address",
 });
 
-function readTextFile(json_url, regionRecord_url, csv_url,  main_function) {
+
+function readTextFile(main_function) {
     // 读取POI基本信息
     console.log("Reading GeoJson File...")
     $.ajax({
@@ -67,12 +79,13 @@ function readTextFile(json_url, regionRecord_url, csv_url,  main_function) {
         dataType: "json",
         success: 
         function (json_data) {
-            readRegionCSVFile(regionRecord_url, csv_url, json_data, main_function)
+            // readRegionCSVFile(json_data, main_function)
+            readGroupedRegionCSVFile(json_data, main_function)
         }
     });
 }
 
-function readRegionCSVFile(regionRecord_url, csv_url, json_data, main_function){
+function readRegionCSVFile(json_data, main_function){
     // 读取各个区的统计信息 regionRecord_url=Shanghai_region_data_T.csv
     console.log("Reading region data...")
 
@@ -83,7 +96,7 @@ function readRegionCSVFile(regionRecord_url, csv_url, json_data, main_function){
         success: 
         function (data) {
             region_data = processData(data);
-            readCSVFile(csv_url, json_data, region_data, main_function)
+            readCSVFile(json_data, region_data, main_function)
         }
     });
     // 处理region csv数据
@@ -92,11 +105,9 @@ function readRegionCSVFile(regionRecord_url, csv_url, json_data, main_function){
         var allTextLines = allText.split(/\r\n|\n/);
         var headers = allTextLines[0].split(',');
         var lines = [];
-
-        for (var i=1; i<allTextLines.length; i++) {
+        for (let i=1; i<allTextLines.length; i++) {
             var data = allTextLines[i].split(',');
             if (data.length == headers.length) {
-
                 var tarr = {};
                 for (var j=0; j<headers.length; j++) {
                     if (headers[j] == "address"){
@@ -104,7 +115,6 @@ function readRegionCSVFile(regionRecord_url, csv_url, json_data, main_function){
                     }else{
                         tarr[headers[j]] = parseFloat(data[j]);
                     }
-                    
                 }
                 lines.push(tarr);
             }
@@ -113,8 +123,24 @@ function readRegionCSVFile(regionRecord_url, csv_url, json_data, main_function){
     }
 }
 
+function readGroupedRegionCSVFile(json_data, main_function){
+    var grouped_data = {}
+    d3.csv( regionRecord_url, function(new_case_data) {
+        d3.csv( hospital_occupy_url, function(hospital_occupy_data){
+            d3.csv( society_newCase_url, function(society_new_case_data){
+                grouped_data["new_case_data"] = new_case_data
+                grouped_data["hospital_occupy_data"] = hospital_occupy_data
+                grouped_data["society_new_case_data"] = society_new_case_data
+                readCSVFile(json_data, grouped_data, main_function)
 
-function readCSVFile(csv_url, json_data, region_data, callback){
+            })
+        })
+    });
+    
+    
+}
+
+function readCSVFile(json_data, grouped_data, callback){
     // 读取存储通报信息的csv csv_url=time_series.csv
     console.log("Reading encode address report data...")
     $.ajax({
@@ -124,15 +150,15 @@ function readCSVFile(csv_url, json_data, region_data, callback){
         success: function(data) {
             // [csv_data,  poi_info_dict, min_w, max_w]= process_POIData(data);
             ret_data = process_POIData(data);
-            console.log("ret data type: "+ typeof ret_data)
-            // console.log(ret_data)
+            // console.log("ret data type: "+ typeof ret_data)
             csv_data = ret_data.csv_data;
             poi_info_dict = ret_data.poi_info_dict;
             min_w = ret_data.min_w;
             max_w = ret_data.max_w;
             console.log( "Number of POI is : " +  Object.keys(poi_info_dict).length );
             console.log("min weight is "+min_w+" max weight is "+max_w);
-            callback(json_data, region_data, csv_data, poi_info_dict, min_w, max_w);
+            // 调用主函数
+            callback(json_data, grouped_data, csv_data, poi_info_dict, min_w, max_w);
         }
     });
     // 处理每个小区通报的csv数据，存储POI更新信息
@@ -190,18 +216,17 @@ function readCSVFile(csv_url, json_data, region_data, callback){
 }
 
 
-
-
-
 function main(){
     console.log("main function!")
 
-    readTextFile(
-        json_url = "source/data/CaseInfo_April/estate_info_POI_category.json", 
-        regionRecord_url = "source/data/CaseInfo_April/Shanghai_region_data_T.csv",
-        csv_url = "source/data/CaseInfo_April/time_series.csv",
-        loadMap
-    )
+    readTextFile( loadMap ) // 读取数据后绘制地图
+    // readTextFile( justDebug )
+}
+
+function justDebug(json_data, grouped_data, csv_data, poi_info_dict, min_w, max_w){
+    console.log("Check grouped data")
+    console.log(Object.keys(grouped_data))
+    console.log(grouped_data)
 }
 
 function updateGeojson(json_data, poi_info_dict, min_w, max_w){
@@ -228,7 +253,7 @@ function updateGeojson(json_data, poi_info_dict, min_w, max_w){
     }
 }
 
-function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
+function loadMap(json_data, grouped_data, csv_data, poi_info_dict, min_w, max_w){
 
     //更新Geojson中POI信息
     updateGeojson(json_data, poi_info_dict, min_w, max_w)
@@ -237,6 +262,7 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
 
     console.log("Loading Map...")
 
+    var cityPopup
     // 定义点击POI后的格式
     const popup = new Vue({
         el: "#popup",
@@ -392,10 +418,11 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
 
         // console.log("Plot "+ popup.district)
         // plotRegionLine(
-        //     allRegionData=region_data,
+        //     allRegionData=grouped_data,
         //     regionName=popup.district
         // )
-        plotSideStackedBars("上海市", null, 320, 80)
+
+        plotSideStackedBars(popup.district, grouped_data, 320, 80)
 
     }
     
@@ -413,8 +440,8 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
         cityPopup.remove();
         if (aside_info.district!="上海市"){
             aside_info.district = "上海市"
-            // plotRegionLine(region_data, "上海市") //TODO 绘制上海市折线图
-            plotSideStackedBars("上海市", null, 320, 80)
+            // plotRegionLine(grouped_data, "上海市") //TODO 绘制上海市折线图
+            plotSideStackedBars("上海市", grouped_data, 320, 80)
         }
 
     }
@@ -473,6 +500,7 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
         }, 2000);
         };
     };
+    //TODO debug
     districtWidget.addEventListener("categoriesSelected", debounceDistricts());
     // 拖动界面时更新不同区数值
     layer.on("updated", updateWidgets);
@@ -482,8 +510,8 @@ function loadMap(json_data, region_data, csv_data, poi_info_dict, min_w, max_w){
     interactivity.on("featureClick", featureClickHandler)
     interactivity.on("featureClickOut", featureClickOutHandler)
 
-    // plotRegionLine(region_data, "上海市") //TODO 初始化绘制
-    plotSideStackedBars("上海市", null, 320, 80)
+    // plotRegionLine(grouped_data, "上海市") //TODO 初始化绘制
+    plotSideStackedBars("上海市", grouped_data, 320, 80)
 
     function updateWidgets(){
         districtWidget.style.display = "block";
@@ -806,7 +834,8 @@ function plotRegionLine(allRegionData, regionName){
     }
 }
 
-function plotSideStackedBars(regionName, groupedData, width, height){
+function plotSideStackedBars(region_CN_Name, groupedData, width, height){
+    regionName = districtName[region_CN_Name]
     // 每次点击事件对应处理前首先将所有plot清空，然后再重新绘制
     let temp_item = document.getElementById("region_num_plot");
     if (temp_item!=null){
@@ -820,23 +849,76 @@ function plotSideStackedBars(regionName, groupedData, width, height){
     if (temp_item!=null){
         temp_item.innerHTML = "";
     }
-    category_list = ["A_num", "B_num"]
-    plotSide_regionAddingPlot(regionName, temptempData, "#region_num_plot", category_list, width, height)
-    plotSide_hospitalOccupyPlot(regionName, temptempData, "#hospital_num_plot", category_list, width, height)
-    plotSide_societyAddingPlot(regionName, temptempData, "#society_add_num_plot", category_list, width, height)
+    console.log("grouped data keys : ")
+    console.log( Object.keys(groupedData) )
+    // 绘制各个区域新增数
+    plotSide_regionAddingPlot(regionName, groupedData["new_case_data"], "#region_num_plot", width, height)
+    plotSide_hospitalOccupyPlot(regionName, groupedData["hospital_occupy_data"], "#hospital_num_plot", width, height)
+    plotSide_societyAddingPlot(regionName, groupedData["society_new_case_data"], "#society_add_num_plot", width, height)
 }
 
-function plotSide_regionAddingPlot(regionName, tempData, div_id, category_list, temp_w, temp_h){
+function chooseData(data, district){
+    // console.log(data)
+    let retData = []
+    let aimData = data.filter(function(d){
+        return d.address === district // TODO 查找对应数据
+    })
+    aimData = aimData[0]
+    let record_date = null
+    let day_record = {}
+    for (let key in aimData){
+        if (key=="address"){
+            continue
+        }else{
+            let temp_k = key.split("_")
+            let temp_date = temp_k[0]
+            let temp_kind = temp_k[1]
+            let temp_num = parseFloat(aimData[key])
+            if (record_date!=null){
+                console.assert(day_record.hasOwnProperty("date") , "出现错误，单独的天数记录！"+temp_date)
+                day_record[temp_kind] = temp_num
+                // update record data
+                record_date = null
+                retData.push(day_record)
+                day_record = {}
+            }else {
+                day_record["date"] = temp_date
+                day_record[temp_kind] = temp_num
+                record_date = temp_date
+            }
+        }
+    }
+    // console.log(retData)
+    return retData
+}
 
-    plotStackedBar(tempData, div_id, category_list, temp_w, temp_h)
+function plotSide_regionAddingPlot(regionName, partData, div_id, temp_w, temp_h){
+    let category_list =  ["quezhen", "wuzhengzhuang"]
+    let show_name_dict = {"quezhen":"确诊", "wuzhengzhuang":"无症状感染者"}
+    let tempData = chooseData(partData, regionName)
+    // console.log("#### check region new case data: ####")
+    // console.log(tempData)
+    plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h)
 }
-function plotSide_hospitalOccupyPlot(regionName, tempData, div_id, category_list, temp_w, temp_h){
-    plotStackedBar(tempData, div_id, category_list, temp_w, temp_h)
+function plotSide_hospitalOccupyPlot(regionName, partData, div_id, temp_w, temp_h){
+    let category_list = ["yiyuan", "fangcang"]
+    let show_name_dict = {"yiyuan":"医院治疗", "fangcang":"方舱医院治疗"}
+    let tempData = chooseData(partData, regionName)
+    // console.log("#### check hospital occupy data: ####")
+    // console.log(tempData)
+    plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h)
 }
-function plotSide_societyAddingPlot(regionName, tempData, div_id, category_list, temp_w, temp_h){
-    plotStackedBar(tempData, div_id, category_list, temp_w, temp_h)
+function plotSide_societyAddingPlot(regionName, partData, div_id, temp_w, temp_h){
+    let category_list =  ["quezhen", "wuzhengzhuang"]
+    let show_name_dict = {"quezhen":"社会面确诊", "wuzhengzhuang":"社会面无症状感染者"}
+    let tempData = chooseData(partData, regionName)
+    // console.log("#### check society new case data: ####")
+    // console.log(tempData)
+    plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h)
 }
-function plotStackedBar(tempData, div_id, category_list, temp_w=270, temp_h=80){
+
+function plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h){
+    // console.log("#### width is: "+temp_w+" height is: "+temp_h)
     // var margin = {top: 40, right: 20, bottom: 30, left: 40},
     var margin = {top: 5, right: 3, bottom: 5, left: 3},
 
@@ -950,10 +1032,10 @@ function plotStackedBar(tempData, div_id, category_list, temp_w=270, temp_h=80){
     .on("mousemove", mousemoveFunc)
     .on("mouseout", mouseoutFunc);
     function mouseoverFunc(d) {
-    // console.log("moused over", d.x);
-    tooltip
-    .style("display", null)
-    .html("<strong>" + d.x + "</strong> - <strong>" + d.component + "</strong> : <span style='color:red'><strong>" + d.y + "</strong></span>")
+        tooltip
+        .style("display", null)
+        // .html("<strong>" + d.x + "</strong> - <strong>" + show_name_dict[d.component] + "</strong> : <span style='color:red'><strong>" + d.y + "</strong></span>")
+        .html("<p><strong>" + d.x + "</strong></p> <p><strong>" + show_name_dict[d.component] + "</strong> : <span style='color:#4b93cf'><strong>" + d.y + "</strong></span> </p>")
     }
 
     function mousemoveFunc(d) {

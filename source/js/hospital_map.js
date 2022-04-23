@@ -4,7 +4,7 @@ let hospitalMap = new mapboxgl.Map({
     container: "hospMap",
     style: carto.basemaps.darkmatter,
     center: [121.492849, 31.228211],
-    zoom: 9,
+    zoom: 8,
   });
 
 
@@ -45,7 +45,7 @@ function load_hospitalMap(json_url, main_function) {
 
 function draw_hospitalMap(json_data){
     console.log("Loading hospital Map...")
-    console.log(json_data.features[0])
+    // console.log(json_data.features[0])
     const viz = new carto.Viz(`
         color: rgba(255, 0, 0, ramp(zoomrange([8,10,12]), [0.6,0.7,0.9]) )
         strokeColor: rgba(255, 0, 0, 0.1)
