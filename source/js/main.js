@@ -390,7 +390,7 @@ function loadMap(json_data, grouped_data, csv_data, poi_info_dict, min_w, max_w)
                         // 添加barplot信息
                         time_log_bar.push(temp_d)
                         if (ticks_index.includes(count)){
-                            console.log("count is: "+ count + "; Key is: "+key)
+                            // console.log("count is: "+ count + "; Key is: "+key)
                             tick_values.push(key) //TODO 添加需要保存显示的日期
                         }
                     }else{
@@ -404,8 +404,8 @@ function loadMap(json_data, grouped_data, csv_data, poi_info_dict, min_w, max_w)
             }
             popup.reportNum = sum_count
             popup.daycount = day_count
-            console.log("tickValues are : ")
-            console.log(tick_values)
+            // console.log("tickValues are : ")
+            // console.log(tick_values)
             // 绘制折线图
             plotPOIBar(time_log_bar, tick_values)
             // TODO 取消绘制折线图

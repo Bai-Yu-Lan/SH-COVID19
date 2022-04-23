@@ -1,5 +1,5 @@
 // 定义地图背景
-let hospitalMap = new mapboxgl.Map({
+var hospitalMap = new mapboxgl.Map({
     // container: "hosp-lightbox",
     container: "hospMap",
     style: carto.basemaps.darkmatter,
