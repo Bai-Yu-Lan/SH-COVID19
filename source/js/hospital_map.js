@@ -1,15 +1,22 @@
 // 定义地图背景
 let hospitalMap = new mapboxgl.Map({
     // container: "hosp-lightbox",
-    container: "hospMain",
+    container: "hospMap",
     style: carto.basemaps.darkmatter,
     center: [121.492849, 31.228211],
-    zoom: 10,
+    zoom: 9,
   });
 
 
 // 地图缩放控制器
 hospitalMap.addControl(new mapboxgl.NavigationControl(), "bottom-right");
+
+// TODO 中文插件
+// mapboxgl.setRTLTextPlugin('https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.1.0/mapbox-gl-rtl-text.js');
+// var languageControl = new MapboxLanguage({
+//     defaultLanguage: 'zh'//设置语言为中文
+// });
+// hospitalMap.addControl(languageControl);
 
 // hospitalMap.once('load', () => {
 //     hospitalMap.resize()
@@ -56,7 +63,7 @@ function draw_hospitalMap(json_data){
     hospitalMap.resize()
 }
 
-
+load_hospitalMap("source/data/CaseInfo_April/hospital_info.json", draw_hospitalMap)
 
 var cityButton = document.querySelector("#load_hospital_map")
-cityButton.addEventListener("Click", load_hospitalMap("source/data/CaseInfo_April/hospital_info.json", draw_hospitalMap))
+cityButton.addEventListener("Click", hospitalMap.resize() )
