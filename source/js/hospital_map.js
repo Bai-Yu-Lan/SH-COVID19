@@ -46,10 +46,9 @@ function draw_hospitalMap(json_data){
         width: ramp(zoomrange([8,10,13,15]), [5,10,15,20])
         @district: $district
         @name: $name
-        @category: $category
-        @level: $level
         @address: $address
-        @supports: $supports
+        @closed: $closed
+        @opening: $opening
     `);
     const source = new carto.source.GeoJSON(json_data)
     const layer = new carto.Layer("hospital_layer", source, viz)
