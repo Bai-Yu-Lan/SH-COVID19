@@ -37,6 +37,12 @@ let map = new mapboxgl.Map({
   zoom,
 });
 
+// TODO 中文插件
+// mapboxgl.setRTLTextPlugin('https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.1.0/mapbox-gl-rtl-text.js');
+// var languageControl = new MapboxLanguage({
+//     defaultLanguage: 'zh'//设置语言为中文
+// });
+// map.addControl(languageControl);
 
 // 地图缩放控制器
 map.addControl(new mapboxgl.NavigationControl(), "bottom-right");
