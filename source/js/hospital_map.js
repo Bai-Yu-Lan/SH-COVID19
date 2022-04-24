@@ -51,11 +51,14 @@ function draw_hospitalMap(json_data){
         strokeColor: rgba(255, 0, 0, 0.1)
         strokeWidth: 1
         width: ramp(zoomrange([8,10,13,15]), [5,10,15,20])
-        @district: $district
-        @name: $name
-        @address: $address
-        @closed: $closed
-        @opening: $opening
+        @district: $区县
+        @name: $医院
+        @address: $地址
+        @closed: $停诊科室
+        @opened: $开诊科室
+        @outpatient_call: $门诊电话
+        @emergency_call: $急诊电话
+        @call: $总机
     `);
     const source = new carto.source.GeoJSON(json_data)
     const layer = new carto.Layer("hospital_layer", source, viz)

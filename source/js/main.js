@@ -73,16 +73,19 @@ const geocoder = new MapboxGeocoder({
 function readTextFile(main_function) {
     // 读取POI基本信息
     console.log("Reading GeoJson File...")
-    $.ajax({
-        url: json_url,
-        type: "GET",
-        dataType: "json",
-        success: 
-        function (json_data) {
-            // readRegionCSVFile(json_data, main_function)
-            readGroupedRegionCSVFile(json_data, main_function)
-        }
-    });
+    // $.ajax({
+    //     url: json_url,
+    //     type: "GET",
+    //     dataType: "json",
+    //     success: 
+    //     function (json_data) {
+    //         // readRegionCSVFile(json_data, main_function)
+    //         readGroupedRegionCSVFile(json_data, main_function)
+    //     }
+    // });
+    d3.json(json_url, function(err, json_data){
+        readGroupedRegionCSVFile(json_data, main_function)
+    })
 }
 
 function readRegionCSVFile(json_data, main_function){
@@ -107,10 +110,10 @@ function readRegionCSVFile(json_data, main_function){
         var lines = [];
         for (let i=1; i<allTextLines.length; i++) {
             var data = allTextLines[i].split(',');
-            if (data.length == headers.length) {
+            if (data.length === headers.length) {
                 var tarr = {};
                 for (var j=0; j<headers.length; j++) {
-                    if (headers[j] == "address"){
+                    if (headers[j] === "address"){
                         tarr[headers[j]] = data[j];
                     }else{
                         tarr[headers[j]] = parseFloat(data[j]);
@@ -132,7 +135,6 @@ function readGroupedRegionCSVFile(json_data, main_function){
                 grouped_data["hospital_occupy_data"] = hospital_occupy_data
                 grouped_data["society_new_case_data"] = society_new_case_data
                 readCSVFile(json_data, grouped_data, main_function)
-
             })
         })
     });
@@ -173,7 +175,7 @@ function readCSVFile(json_data, grouped_data, callback){
         var headers = allTextLines[0].split(',');
         for (var i=1; i<allTextLines.length; i++) {
             var data = allTextLines[i].split(',');
-            if (data.length == headers.length) {
+            if (data.length === headers.length) {
                 var tarr = {}; //存储csv文件中的一行信息
                 var temp_poi_data = {}; //存储单个POI对应的部分信息
                 var report_num = 0; //小区被通报的次数
@@ -262,7 +264,7 @@ function loadMap(json_data, grouped_data, csv_data, poi_info_dict, min_w, max_w)
 
     console.log("Loading Map...")
 
-    var cityPopup
+    // var cityPopup
     // 定义点击POI后的格式
     const popup = new Vue({
         el: "#popup",
@@ -301,28 +303,27 @@ function loadMap(json_data, grouped_data, csv_data, poi_info_dict, min_w, max_w)
 
     // 点击poi的事件
     function featureClickHandler(event){
-        let temp_item = document.getElementById('poi_barplot');
-        if (temp_item!=null){
-            temp_item.innerHTML = "";
-        }
-        temp_item = document.getElementById('poi_lineplot');
-        if (temp_item!=null){
-            temp_item.innerHTML = "";
-        }
-        
+    
         const feature = event.features[0];
         // console.log(event.features)
         if (event.features.length < 1) {
             return;
         }
 
-        feature.blendTo(
-            {
-                strokeWidth: 2,
-                color: "grey",
-                width: 15,
-            }, 0.05 
-        );
+        // console.log("% Feature Click Handler... %")
+        // let start = performance.now();
+
+        // console.log("\t # stage 1... %")
+        // let start1 = performance.now();
+        
+        // RNM 退钱!
+        // feature.blendTo(
+        //     {
+        //         strokeWidth: 2,
+        //         color: "grey",
+        //         width: 15,
+        //     }, 0.05 
+        // );
 
         // console.log("Update weight is: "+ feature.variables.last_update_weight.value)
         popup.address = feature.variables.address.value
@@ -337,45 +338,57 @@ function loadMap(json_data, grouped_data, csv_data, poi_info_dict, min_w, max_w)
         popup.lon = coords.lng.toFixed(4)
         popup.lat = coords.lat.toFixed(4)
 
-        if (cityPopup) {
-            cityPopup.remove();
-            // event.features.forEach((feature) => feature.reset());
-        }
-        cityPopup = new mapboxgl.Popup({
-            closeButton: false,
-            closeOnClick: false,
-        }).setLngLat([coords.lng, coords.lat])
+        // let end1 = performance.now();
+        // console.log('\t stage 1 cost is', `${end1 - start1}ms`) 
+
+        // if (cityPopup) {
+        //     cityPopup.remove();
+        //     event.features.forEach((feature) => feature.reset());
+        // }
+        // cityPopup = new mapboxgl.Popup({
+        //     closeButton: false,
+        //     closeOnClick: false,
+        // }).setLngLat([coords.lng, coords.lat])
+        //     .setDOMContent(popup.$el)
+        //     .addTo(map)
+
+        // console.log("\t # stage 2... %")
+        // let start2 = performance.now();
+
+        new mapboxgl.Popup().setLngLat([coords.lng, coords.lat])
             .setDOMContent(popup.$el)
             .addTo(map)
 
         var aimData = csv_data.filter(function(d){
             // return d.address === feature.variables.address.value
-            return d.encode === feature.variables.encode.value // TODO 查找对应数据
+            return d.encode === feature.variables.encode.value // TODO 查找该POI对应数据
         })
-        console.log("aimData is: ")
-        console.log(aimData)
-        // console.log(!(aimData===undefined) && (aimData.length>0))
 
         var time_log_bar = []
         const ticks_index = [1,7,14,21] // 显示的日期
         var tick_values = []
-        var time_log_line = []
-        let line_sum_num = 0
+        // var time_log_line = []
+        // let line_sum_num = 0
         var sum_count = 0 //小区这几天被通报的总次数
         // console.log(feature.variables)
         var day_count = 0
         popup.reportNum = 0
         popup.daycount = 0
+
+        // let end2 = performance.now();
+        // console.log('\t stage 2 cost is', `${end2 - start2}ms`) 
+
+        // console.log("\t # stage 3... %")
+        // let start3 = performance.now();
+
         if (!(aimData===undefined) && (aimData.length>0) ){
             let day_num = Object.keys(aimData[0]).length
-            // console.log("Keys:")
-            // console.log(Object.keys(aimData[0]))
             let start_i = day_num-21 // TODO 仅保留21天的数据
             let count = 0
             let i=0
             for (var key in aimData[0]){
                 i+=1
-                if(key=="encode"){ 
+                if(key==="encode"){ 
                     continue
                 }else if (i>start_i){ 
                     day_count+=1
@@ -394,20 +407,20 @@ function loadMap(json_data, grouped_data, csv_data, poi_info_dict, min_w, max_w)
                             tick_values.push(key) //TODO 添加需要保存显示的日期
                         }
                     }else{
-                        line_sum_num += aimData[0][key]
-                        temp_d["num"] = line_sum_num
-                        // 添加lineplot信息
-                        time_log_line.push(temp_d)
+                        // line_sum_num += aimData[0][key]
+                        // temp_d["num"] = line_sum_num
+                        // // 添加lineplot信息
+                        // time_log_line.push(temp_d)
                     }
-                    
                 }
             }
+
             popup.reportNum = sum_count
             popup.daycount = day_count
-            // console.log("tickValues are : ")
-            // console.log(tick_values)
-            // 绘制折线图
+
+            // 绘制popup Bar
             plotPOIBar(time_log_bar, tick_values)
+
             // TODO 取消绘制折线图
             // if (line_sum_num > 0){
             //     plotPOILine(tempData=time_log_line)
@@ -416,34 +429,35 @@ function loadMap(json_data, grouped_data, csv_data, poi_info_dict, min_w, max_w)
             // }
         }
 
-        // console.log("Plot "+ popup.district)
-        // plotRegionLine(
-        //     allRegionData=grouped_data,
-        //     regionName=popup.district
-        // )
+        // let end3 = performance.now();
+        // console.log('\t stage 3 cost is', `${end3 - start3}ms`) 
 
         plotSideStackedBars(popup.district, grouped_data, 320, 80)
 
+        delete feature
+        // console.log("deleted feature is :")
+        // console.log(feature)
+
+        // let end = performance.now();
+        // console.log('cost is', `${end - start}ms`)        
+        // console.log("Feature click finished!")
     }
     
     //点击其他区域的事件
     function featureClickOutHandler(event) {
+        // console.log("# Click out Handler... #")
+        // let start = performance.now();
+
         event.features.forEach((feature) => feature.reset());
-        let temp_item = document.getElementById('poi_barplot');
-        if (temp_item!=null){
-            temp_item.innerHTML = "";
-        }
-        temp_item = document.getElementById('poi_lineplot');
-        if (temp_item!=null){
-            temp_item.innerHTML = "";
-        }
-        cityPopup.remove();
-        if (aside_info.district!="上海市"){
+        // cityPopup.remove();
+        if (aside_info.district!=="上海市"){
             aside_info.district = "上海市"
-            // plotRegionLine(grouped_data, "上海市") //TODO 绘制上海市折线图
             plotSideStackedBars("上海市", grouped_data, 320, 80)
         }
 
+        // let end = performance.now();
+        // console.log('cost is', `${end - start}ms`)        
+        // console.log("Click out Handler finished!")
     }
 
     // Define Viz object and custom style
@@ -489,29 +503,21 @@ function loadMap(json_data, grouped_data, csv_data, poi_info_dict, min_w, max_w)
         let inDebounce;
         let s = carto.expressions;
         return (event) => {
-        clearTimeout(inDebounce);
-        const districts = event.detail;
-        if (districts.length === 0) {
-            console.log(s.prop("district"))
-            return viz.filter.blendTo(1);
-        }
-        inDebounce = setTimeout(() => {
-            return viz.filter.blendTo( s.in(s.prop('district'), s.list(districts)) );
-        }, 2000);
+            clearTimeout(inDebounce);
+            const districts = event.detail;
+            if (districts.length === 0) {
+                console.log(s.prop("district"))
+                return viz.filter.blendTo(1);
+            }
+            inDebounce = setTimeout(() => {
+                return viz.filter.blendTo( s.in(s.prop('district'), s.list(districts)) );
+            }, 2000);
         };
     };
-    //TODO debug
+
     districtWidget.addEventListener("categoriesSelected", debounceDistricts());
     // 拖动界面时更新不同区数值
     layer.on("updated", updateWidgets);
-
-    const interactivity = new carto.Interactivity(layer)
-    // 鼠标点击的时候显示信息
-    interactivity.on("featureClick", featureClickHandler)
-    interactivity.on("featureClickOut", featureClickOutHandler)
-
-    // plotRegionLine(grouped_data, "上海市") //TODO 初始化绘制
-    plotSideStackedBars("上海市", grouped_data, 320, 80)
 
     function updateWidgets(){
         districtWidget.style.display = "block";
@@ -525,73 +531,89 @@ function loadMap(json_data, grouped_data, csv_data, poi_info_dict, min_w, max_w)
         });
     }
 
-    function showLegend() {
-        // const legend = document.querySelector(".js-legend");
-        const raw_legend = document.getElementById("raw_legend");
-        const cat_legend = document.getElementById("category_legend");
-        raw_legend.classList.remove("is-hidden");
-        cat_legend.classList.add("is-hidden");
-      }
+    const interactivity = new carto.Interactivity(layer)
+    // TODO 鼠标点击的时候显示信息
+    interactivity.on("featureClick", featureClickHandler)
+    interactivity.on("featureClickOut", featureClickOutHandler)
+    // interactivity.on("featureHover", featureClickHandler)
+    // interactivity.on("featureLeave", featureClickOutHandler)
+
+    plotSideStackedBars("上海市", grouped_data, 320, 80)
+
+
+
+    const raw_legend = document.getElementById("raw_legend");
+    const cat_legend = document.getElementById("category_legend");
+
     
-    function hideLegend() {
-        // const legend = document.querySelector(".js-legend");
-        const raw_legend = document.getElementById("raw_legend");
-        const cat_legend = document.getElementById("category_legend");
-        raw_legend.classList.add("is-hidden");
-        cat_legend.classList.remove("is-hidden");
-    }
+
     const styleSwitch = document.querySelector("as-switch");
     styleSwitch.addEventListener("change", (event) => {
-      const enabled = event.detail;
-      if (enabled) {
-        hideLegend();
-        return viz.color.blendTo("@categoryRamp") && viz.width.blendTo("ramp(zoomrange([8,10,13,15]), [0.05,3,9,15])");
-      }
-      showLegend();
-      return viz.color.blendTo( "@colorRamp" ) && viz.width.blendTo("@widthRamp");
+        const enabled = event.detail;
+        if (enabled) {
+            hideLegend(raw_legend, cat_legend);
+            return viz.color.blendTo("@categoryRamp") && viz.width.blendTo("ramp(zoomrange([8,10,13,15]), [0.05,3,9,15])");
+        }
+        showLegend(raw_legend, cat_legend);
+        return viz.color.blendTo( "@colorRamp" ) && viz.width.blendTo("@widthRamp");
     });
-
 
 }
 
+
+function showLegend(raw_legend, cat_legend) {
+    // const legend = document.querySelector(".js-legend");
+    raw_legend.classList.remove("is-hidden");
+    cat_legend.classList.add("is-hidden");
+}
+function hideLegend(raw_legend, cat_legend) {
+    // const legend = document.querySelector(".js-legend");
+    // const raw_legend = document.getElementById("raw_legend");
+    // const cat_legend = document.getElementById("category_legend");
+    raw_legend.classList.add("is-hidden");
+    cat_legend.classList.remove("is-hidden");
+}
 
 main();
 
 
 function plotPOIBar(tempData, tick_values){
-    var margin = {top: 5, right: 6, bottom: 15, left: 6},
+    // console.log("Plotting PopUp Bar plot...")
+    // let start = performance.now();
+
+    d3.select("#poi_barplot").select("svg").remove();
+    let margin = {top: 5, right: 6, bottom: 15, left: 6},
 
     width = 240 - margin.left - margin.right,
     height = 90 - margin.top - margin.bottom;
 
-    var formatPercent = d3.format(".0%");
 
-    var x = d3.scale.ordinal()
+    let x = d3.scale.ordinal()
         .rangeRoundBands([0, width], .1);
 
-    var y = d3.scale.linear()
+    let y = d3.scale.linear()
         .range([height, 0]);
 
-    var xAxis = d3.svg.axis()
+    let xAxis = d3.svg.axis()
         .scale(x)
         .outerTickSize(0)
         .tickValues(tick_values)
         .orient("bottom");
 
-    // var yAxis = d3.svg.axis()
+    // let yAxis = d3.svg.axis()
     //     .scale(y)
     //     .orient("left")
     //     .tickFormat(formatPercent);
 
-    var tip = d3.tip()
+    let tip = d3.tip()
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html(function(d) {
         // return "<strong>" + d.date + "</strong> : <span style='color:red'><strong>" + d.num + "</strong></span>";
         return "<strong>" + d.date + "</strong>";
     })
-
-    var svg = d3.select("#poi_barplot").append("svg")
+    
+    let svg = d3.select("#poi_barplot").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -634,6 +656,10 @@ function plotPOIBar(tempData, tick_values){
             .attr('ry',3)
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide)
+
+    // let end = performance.now();
+    // console.log('cost is', `${end - start}ms`)        
+    // console.log("PopUp Bar plot finished!")
 
 }
 
@@ -724,10 +750,10 @@ function plotPOILine(tempData){
 }
 
 function plotRegionLine(allRegionData, regionName){
-    let temp_item = document.getElementById("region_num_plot");
-    if (temp_item!=null){
-        temp_item.innerHTML = "";
-    }
+    // let temp_item = document.getElementById("region_num_plot");
+    // if (temp_item!=null){
+    //     temp_item.innerHTML = "";
+    // }
     console.log("regionName: "+regionName)
     var aimData = allRegionData.filter(function(d){
         return d.address === districtName[regionName]
@@ -736,7 +762,7 @@ function plotRegionLine(allRegionData, regionName){
     if ((aimData!=undefined)&&(aimData.length>0)){
         var tempData = []
         for(let key in aimData[0]){
-            if(key=="address"){
+            if(key==="address"){
                 continue
             }else{
                 var temp_d = {}
@@ -836,21 +862,6 @@ function plotRegionLine(allRegionData, regionName){
 
 function plotSideStackedBars(region_CN_Name, groupedData, width, height){
     regionName = districtName[region_CN_Name]
-    // 每次点击事件对应处理前首先将所有plot清空，然后再重新绘制
-    let temp_item = document.getElementById("region_num_plot");
-    if (temp_item!=null){
-        temp_item.innerHTML = "";
-    }
-    temp_item = document.getElementById("hospital_num_plot");
-    if (temp_item!=null){
-        temp_item.innerHTML = "";
-    }
-    temp_item = document.getElementById("society_add_num_plot");
-    if (temp_item!=null){
-        temp_item.innerHTML = "";
-    }
-    console.log("grouped data keys : ")
-    console.log( Object.keys(groupedData) )
     // 绘制各个区域新增数
     plotSide_regionAddingPlot(regionName, groupedData["new_case_data"], "#region_num_plot", width, height)
     plotSide_hospitalOccupyPlot(regionName, groupedData["hospital_occupy_data"], "#hospital_num_plot", width, height)
@@ -867,7 +878,7 @@ function chooseData(data, district){
     let record_date = null
     let day_record = {}
     for (let key in aimData){
-        if (key=="address"){
+        if (key==="address"){
             continue
         }else{
             let temp_k = key.split("_")
@@ -893,33 +904,63 @@ function chooseData(data, district){
 }
 
 function plotSide_regionAddingPlot(regionName, partData, div_id, temp_w, temp_h){
+    // console.log("Plotting region new case plot...")
+    // let start = performance.now();
+
     let category_list =  ["quezhen", "wuzhengzhuang"]
     let show_name_dict = {"quezhen":"确诊", "wuzhengzhuang":"无症状感染者"}
     let tempData = chooseData(partData, regionName)
     // console.log("#### check region new case data: ####")
     // console.log(tempData)
     plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h)
+
+    // let end = performance.now();
+    // console.log('cost is', `${end - start}ms`)
+    // console.log("Region new case plot finished!")
 }
 function plotSide_hospitalOccupyPlot(regionName, partData, div_id, temp_w, temp_h){
+    // console.log("Plotting hospital occupy num plot...")
+    // let start = performance.now();
+
     let category_list = ["yiyuan", "fangcang"]
     let show_name_dict = {"yiyuan":"医院治疗", "fangcang":"方舱医院治疗"}
     let tempData = chooseData(partData, regionName)
     // console.log("#### check hospital occupy data: ####")
     // console.log(tempData)
     plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h)
+
+    // let end = performance.now();
+    // console.log('cost is', `${end - start}ms`)
+    // console.log("Hospital occupy num plot finished")
 }
 function plotSide_societyAddingPlot(regionName, partData, div_id, temp_w, temp_h){
+    // console.log("Plotting society new case plot...")
+    // let start = performance.now();
+
     let category_list =  ["quezhen", "wuzhengzhuang"]
     let show_name_dict = {"quezhen":"社会面确诊", "wuzhengzhuang":"社会面无症状感染者"}
     let tempData = chooseData(partData, regionName)
     // console.log("#### check society new case data: ####")
     // console.log(tempData)
     plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h)
+
+    // let end = performance.now();
+    // console.log('cost is', `${end - start}ms`)
+    // console.log("Society new case plot finished!")
 }
 
 function plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h){
-    // console.log("#### width is: "+temp_w+" height is: "+temp_h)
-    // var margin = {top: 40, right: 20, bottom: 30, left: 40},
+
+    function makeData(segmentsStacked, data) {
+        return segmentsStacked.map(function(component) {
+            return data.map(function(d) {
+            return {x: d["date"], y: +d[component], component: component};
+            })
+        });
+    }
+    
+    d3.select(div_id).select("svg").remove();
+    
     var margin = {top: 5, right: 3, bottom: 5, left: 3},
 
     width = temp_w - margin.left - margin.right,
@@ -1053,13 +1094,7 @@ function plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w,
 
 
 
-function makeData(segmentsStacked, data) {
-    return segmentsStacked.map(function(component) {
-        return data.map(function(d) {
-        return {x: d["date"], y: +d[component], component: component};
-        })
-    });
-}
+
 
 
 // 添加顶部lightbox跳转事件
@@ -1102,24 +1137,3 @@ const actions = document.querySelector('header.as-toolbar .as-toolbar__actions')
 function toggleMenu() {
     actions.classList.toggle('as-toolbar__actions--visible');
 };
-
-var temptempData = [
-    {date: "2022-03-06", A_num: 18, B_num: 13},
-    {date: "2022-03-07", A_num: 25, B_num: 13},
-    {date: "2022-03-08", A_num: 35, B_num: 13},
-    {date: "2022-03-09", A_num: 41, B_num: 13},
-    {date: "2022-03-10", A_num: 35, B_num: 13},
-    {date: "2022-03-11", A_num: 63, B_num: 13},
-    {date: "2022-03-12", A_num: 65, B_num: 13},
-    {date: "2022-03-13", A_num: 69, B_num: 13},
-    {date: "2022-03-14", A_num: 19, B_num: 13},
-    {date: "2022-03-15", A_num: 22, B_num: 13},
-    {date: "2022-03-16", A_num: 18, B_num: 13},
-    {date: "2022-03-17", A_num: 26, B_num: 13},
-    {date: "2022-03-18", A_num: 34, B_num: 13},
-    {date: "2022-03-19", A_num: 59, B_num: 13},
-    {date: "2022-03-20", A_num: 58, B_num: 13},
-    {date: "2022-03-21", A_num: 26, B_num: 13},
-    {date: "2022-03-22", A_num: 32, B_num: 13},
-    {date: "2022-03-23", A_num: 11, B_num: 13} 
-]
