@@ -3,9 +3,10 @@ let hospitalMap = new mapboxgl.Map({
     // container: "hosp-lightbox",
     container: "hospMap",
     style: carto.basemaps.darkmatter,
+    doubleClickZoom: true,
     center: [121.492849, 31.228211],
-    zoom: 8,
-  });
+    zoom: 13,
+});
 
 
 // 地图缩放控制器
@@ -36,18 +37,19 @@ function load_hospitalMap(json_url, main_function) {
         url: json_url,
         type: "GET",
         dataType: "json",
-        success: 
-        function (json_data) {
-            main_function(json_data)
-        }
+        success:
+            function (json_data) {
+                main_function(json_data)
+            }
     });
 }
 
-function draw_hospitalMap(json_data){
+function draw_hospitalMap(json_data) {
     console.log("Loading hospital Map...")
     // console.log(json_data.features[0])
     const viz = new carto.Viz(`
         color: rgba(255, 0, 0, ramp(zoomrange([8,10,12]), [0.6,0.7,0.9]) )
+        symbol: markerOutline
         strokeColor: rgba(255, 0, 0, 0.1)
         strokeWidth: 1
         width: ramp(zoomrange([8,10,13,15]), [5,10,15,20])
@@ -86,20 +88,20 @@ function draw_hospitalMap(json_data){
             basic_details: function () {
                 return !!this.address && !!this.name && !!this.district;
             },
-            opened_detail: function(){
-                return !!this.opened
-            },
-            closed_detail: function(){
+            closed_detail: function () {
                 return !!this.closed
             },
-            call_detail: function(){
-                return !!this.call
+            opened_detail: function () {
+                return !!this.opened
             },
-            out_call_detail: function(){
+            out_call_detail: function () {
                 return !!this.outpatient_call
             },
-            emer_call_detail: function(){
+            emer_call_detail: function () {
                 return !!this.emergency_call
+            },
+            call_detail: function () {
+                return !!this.call
             },
         },
     });
@@ -112,7 +114,7 @@ function draw_hospitalMap(json_data){
     // hosp_interactivity.on("featureLeave", featureLeaveHandler)
 
     var hosPopup
-    function featureHoverHandler(event){
+    function featureHoverHandler(event) {
         const feature = event.features[0];
         if (event.features.length < 1) {
             return;
@@ -130,7 +132,7 @@ function draw_hospitalMap(json_data){
         temp_lon = coords.lng.toFixed(4)
         temp_lat = coords.lat.toFixed(4)
 
-        if (hosPopup){
+        if (hosPopup) {
             hosPopup.remove()
             event.features.forEach((feature) => feature.reset());
         }
@@ -141,7 +143,7 @@ function draw_hospitalMap(json_data){
             .setDOMContent(hosp_popup.$el)
             .addTo(hospitalMap)
     }
-    function featureLeaveHandler(event){
+    function featureLeaveHandler(event) {
         hosPopup.remove()
         event.features.forEach((feature) => feature.reset());
     }
@@ -150,4 +152,4 @@ function draw_hospitalMap(json_data){
 load_hospitalMap("source/data/CaseInfo_April/hospital_info.json", draw_hospitalMap)
 
 var cityButton = document.querySelector("#load_hospital_map")
-cityButton.addEventListener("Click", hospitalMap.resize() )
+cityButton.addEventListener("Click", hospitalMap.resize())

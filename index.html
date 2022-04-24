@@ -141,9 +141,8 @@
                 <div class="heading">
                     <h1>Data</h1>
                     <!-- <p>How do we calculate place inequality?</p> -->
-                    <p><span>我们每天从</span><a
-                        href='https://wsjkw.sh.gov.cn/' target='_blank'
-                        class='url'>上海卫健委</a><span>的官方网站获取：疫情期间各个区县以及上海市整体每日新增的确诊病例与无症状感染者数量与居住地、解除医学观察无症状感染者人数、治愈出院人数等信息。我们的代码与数据可以在</span><a
+                    <p><span>我们每天从</span><a href='https://wsjkw.sh.gov.cn/' target='_blank'
+                            class='url'>上海卫健委</a><span>的官方网站获取：疫情期间各个区县以及上海市整体每日新增的确诊病例与无症状感染者数量与居住地、解除医学观察无症状感染者人数、治愈出院人数等信息。我们的代码与数据可以在</span><a
                             href='https://github.com/Bai-Yu-Lan/SH-COVID19' target='_blank'
                             class='url'>https://github.com/Bai-Yu-Lan/SH-COVID19</a><span>获取。</span>
                     </p>
@@ -175,13 +174,13 @@
                     <p><span>从上海卫健委手动获取当日患者的居住地信息之后，通过</span><code>update_address.ipynb</code><span>，我们更新包含所有地址的</span><code>all_address.npy</code><span>，然后通过百度地图API获取新增地址所属区县与街道、对应的POI名称与类型、对应的经纬度坐标。</span>
                     </p>
                     <blockquote>
-                        <p><span>   例如，对于徐汇区宜山路600号，可以得到：上海市，徐汇区，田林街道，上海市第六人民医院，医疗，(121.420···, 31.181···)</span></p>
+                        <p><span> 例如，对于徐汇区宜山路600号，可以得到：上海市，徐汇区，田林街道，上海市第六人民医院，医疗，(121.420···, 31.181···)</span></p>
                     </blockquote>
                     <p><span>由于居住地信息中存在多个地址信息对应同一个POI的情况，为了便于进行可视化，我们以
                         </span><code>[省市]-[区县]-[街道]-[经纬度]</code><span> 的格式对每一个坐标点进行编码。</span></p>
                     <blockquote>
-                        <p><span>   例如，上海市，徐汇区，田林街道，(121.420···, 31.181···) -&gt; 021-01-02-123，</span></p>
-                        <p><span>   其中，徐汇区对应区县编码01，田林街道对应徐汇区街道编码02，(121.420···, 31.181···) 对应田林街道的坐标点编码123。</span></p>
+                        <p><span> 例如，上海市，徐汇区，田林街道，(121.420···, 31.181···) -&gt; 021-01-02-123，</span></p>
+                        <p><span> 其中，徐汇区对应区县编码01，田林街道对应徐汇区街道编码02，(121.420···, 31.181···) 对应田林街道的坐标点编码123。</span></p>
                     </blockquote>
                     <p><span>通过这样的编码方式，我们可以正确统计POI在21天之内被通报次数的情况，将上海所有POI被通报情况存入</span><code>time_series.csv</code><span>中：若当日被通报，则对应位置将被置为1。</span>
                     </p>
@@ -233,7 +232,7 @@
                     <li>
                         <h2 id='医疗资源使用情况'><span>医疗资源使用情况</span></h2>
                     </li>
-                    <p><span>在这一部分中，我们通过统计上海每日闭环管理与社会面筛查中新增的无症状感染者、每日接触观察的无症状感染者来估计目前方舱的占用情况；通过统计上海每日新增确诊人数、每日出院人数来估计医院的占用情况。</span>
+                    <p><span>在这一部分中，我们通过统计上海每日闭环管理与社会面筛查中新增的无症状感染者、每日解除观察的无症状感染者来估计目前方舱的占用情况；通过统计每日新增确诊人数、每日出院人数来估计医院的占用情况。由于缺少各个区县每日解除观察无症状感染者的数据，我们暂时无法估计区县级别方舱使用情况。</span>
                     </p>
 
                 </ol>
@@ -257,6 +256,7 @@
                 </ol>
             </div>
         </div>
+        
         <!-- about栏信息 -->
         <div id="about-lightbox" class="section-lightbox js-lightbox">
             <div class="section-content about-section">
