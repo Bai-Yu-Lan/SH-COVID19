@@ -578,11 +578,13 @@ function plotPOIBar(tempData, tick_values){
     // console.log("Plotting PopUp Bar plot...")
     // let start = performance.now();
 
+    // console.log(tempData)
+
     d3.select("#poi_barplot").select("svg").remove();
     let margin = {top: 5, right: 6, bottom: 15, left: 6},
 
     width = 240 - margin.left - margin.right,
-    height = 90 - margin.top - margin.bottom;
+    height = 95 - margin.top - margin.bottom;
 
 
     let x = d3.scale.ordinal()
@@ -648,7 +650,10 @@ function plotPOIBar(tempData, tick_values){
             .attr("x", function(d) { return x(d.date); })
             .attr("width", x.rangeBand())
             .attr("y", function(d) { return y(d.num); })
-            .attr("height", function(d) { return height - y(d.num)-8; })
+            .attr("height", function(d) { 
+                let t_y = height - y(d.num)-8; 
+                return t_y>0? t_y:0; 
+            })
             .attr('rx',3)
             .attr('ry',3)
             .on('mouseover', tip.show)
@@ -872,12 +877,20 @@ function chooseData(data, district){
         return d.address === district // TODO 查找对应数据
     })
     aimData = aimData[0]
+    let day_num = Object.keys(aimData).length
+    const ticks_index = [1,7,14,21] // 显示的日期
+    var tick_values = []
+    let start_i = day_num-42 // TODO 仅保留21天的数据
+    let i=0
+    let count=0
     let record_date = null
     let day_record = {}
     for (let key in aimData){
+        i+=1
         if (key==="address"){
             continue
-        }else{
+        }else if (i>start_i){
+            
             let temp_k = key.split("_")
             let temp_date = temp_k[0]
             let temp_kind = temp_k[1]
@@ -889,15 +902,25 @@ function chooseData(data, district){
                 record_date = null
                 retData.push(day_record)
                 day_record = {}
+                count += 1
+                if (ticks_index.includes(count) ){
+                    // console.log("count is: "+ count + "; Key is: "+key)
+                    tick_values.push(temp_date) //TODO 添加需要保存显示的日期
+                }
             }else {
                 day_record["date"] = temp_date
                 day_record[temp_kind] = temp_num
                 record_date = temp_date
             }
+            
         }
     }
-    // console.log(retData)
-    return retData
+    console.log(tick_values)
+    // return retData
+    return {
+        "retData": retData,
+        "tick_values": tick_values
+    }
 }
 
 function plotSide_regionAddingPlot(regionName, partData, div_id, temp_w, temp_h){
@@ -906,10 +929,12 @@ function plotSide_regionAddingPlot(regionName, partData, div_id, temp_w, temp_h)
 
     let category_list =  ["quezhen", "wuzhengzhuang"]
     let show_name_dict = {"quezhen":"确诊", "wuzhengzhuang":"无症状感染者"}
-    let tempData = chooseData(partData, regionName)
+    let temp = chooseData(partData, regionName)
+    let tempData = temp.retData
+    let temp_tick_values = temp.tick_values
     // console.log("#### check region new case data: ####")
     // console.log(tempData)
-    plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h)
+    plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h, temp_tick_values)
 
     // let end = performance.now();
     // console.log('cost is', `${end - start}ms`)
@@ -921,10 +946,12 @@ function plotSide_hospitalOccupyPlot(regionName, partData, div_id, temp_w, temp_
 
     let category_list = ["yiyuan", "fangcang"]
     let show_name_dict = {"yiyuan":"医院治疗", "fangcang":"方舱医院治疗"}
-    let tempData = chooseData(partData, regionName)
+    let temp = chooseData(partData, regionName)
+    let tempData = temp.retData
+    let temp_tick_values = temp.tick_values
     // console.log("#### check hospital occupy data: ####")
     // console.log(tempData)
-    plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h)
+    plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h, temp_tick_values)
 
     // let end = performance.now();
     // console.log('cost is', `${end - start}ms`)
@@ -936,17 +963,21 @@ function plotSide_societyAddingPlot(regionName, partData, div_id, temp_w, temp_h
 
     let category_list =  ["quezhen", "wuzhengzhuang"]
     let show_name_dict = {"quezhen":"社会面确诊", "wuzhengzhuang":"社会面无症状感染者"}
-    let tempData = chooseData(partData, regionName)
+    let temp = chooseData(partData, regionName)
+    let tempData = temp.retData
+    let temp_tick_values = temp.tick_values
+
     // console.log("#### check society new case data: ####")
     // console.log(tempData)
-    plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h)
+
+    plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h, temp_tick_values)
 
     // let end = performance.now();
     // console.log('cost is', `${end - start}ms`)
     // console.log("Society new case plot finished!")
 }
 
-function plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h){
+function plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w, temp_h, tick_values){
 
     function makeData(segmentsStacked, data) {
         return segmentsStacked.map(function(component) {
@@ -958,7 +989,7 @@ function plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w,
     
     d3.select(div_id).select("svg").remove();
     
-    var margin = {top: 5, right: 3, bottom: 5, left: 3},
+    var margin = {top: 5, right: 12, bottom: 15, left: 12},
 
     width = temp_w - margin.left - margin.right,
     height = temp_h - margin.top - margin.bottom;
@@ -971,23 +1002,11 @@ function plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w,
     // var color = d3.scale.ordinal().range(["#ff6600", "#ffb380"]); // "#ffcc00"
     var color = d3.scale.ordinal().range(["#4b93cf", "#a1e7f7"]); // "#ffcc00"
 
-    var xAxis = d3.svg.axis()
-        .scale(xScale)
-        .orient("up")
-        .outerTickSize(0)
-        .innerTickSize([0])
-        .tickFormat(function(d) { return "" }); //设置不显示内容
-
-    var yAxis = d3.svg.axis()
-    .scale(yScale)
-    .orient("left")
-    .tickFormat(d3.format(".2s")); // for the stacked totals version
-
     var svg = d3.select(div_id).append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     var stack = d3.layout.stack();
     var stacked = stack(makeData(category_list, tempData));
@@ -995,10 +1014,23 @@ function plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w,
 
     xScale.domain(tempData.map(function(d) {return d.date;} ))
 
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .orient("botton")
+        .outerTickSize(0)
+        .innerTickSize(2)
+        .tickValues(tick_values);
+        // .tickFormat(function(d) { return "" }); //设置不显示内容
+
+    var yAxis = d3.svg.axis()
+        .scale(yScale)
+        .orient("left")
+        .tickFormat(d3.format(".2s")); // for the stacked totals version
+
     svg.append("g")
-    .attr("class", "axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(xAxis);
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + (height) + ")")
+        .call(xAxis);
 
     // svg.append("g")
     //     .attr("class", "axis")
@@ -1052,14 +1084,18 @@ function plotStackedBar(tempData, div_id, category_list, show_name_dict, temp_w,
     })  // this just gets the array for bar segment.
 
     svg.selectAll("g.address rect")
-    .transition()
-    .duration(250)
-    .attr("x", function(d) {
-    return xScale(d.x); })
-    .attr("y", function(d) {
-    return yScale(d.y0 + d.y); }) //
-    .attr("height", function(d) {
-    return yScale(d.y0) - yScale(d.y0 + d.y); });  // height is base - tallness
+        .transition()
+        .duration(250)
+        .attr("x", function(d) {
+            return xScale(d.x); 
+        })
+        .attr("y", function(d) {
+            return yScale(d.y0 + d.y); 
+        }) //
+        .attr("height", function(d) {
+            // return yScale(d.y0) - yScale(d.y0 + d.y); 
+            return yScale(d.y0) - yScale(d.y0 + d.y) ; 
+        });  // height is base - tallness
 
     // svg.selectAll(".y.axis").transition().call(yAxis);
     }
