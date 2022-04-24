@@ -77,19 +77,24 @@
             <nav class="as-toolbar__actions">
                 <ul>
                     <li>
-                        <a href="index.html#" data-help="A" class="as-toolbar__item selected js-lightbox-selector">Map</a>
+                        <!-- <a href="index.html#" data-help="A" class="as-toolbar__item selected js-lightbox-selector">Map</a> -->
+                        <a href="#" data-help="A" class="as-toolbar__item selected js-lightbox-selector">Map</a>
                     </li>
                     <li>
-                        <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#hosp-lightbox" id="load_hospital_map">Hospitals</a>
+                        <!-- <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#hosp-lightbox" id="load_hospital_map">Hospitals</a> -->
+                        <a href="#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#hosp-lightbox" id="load_hospital_map">Hospitals</a>
                     </li>
                     <li>
-                        <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#simulation-lightbox">Simulation</a>
+                        <!-- <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#simulation-lightbox">Simulation</a> -->
+                        <a href="#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#simulation-lightbox">Simulation</a>
                     </li>
                     <li>
-                        <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#datas-lightbox">Data</a>
+                        <!-- <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#datas-lightbox">Data</a> -->
+                        <a href="#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#datas-lightbox">Data</a>
                     </li> 
                     <li>
-                        <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#about-lightbox">About</a>
+                        <!-- <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#about-lightbox">About</a> -->
+                        <a href="#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#about-lightbox">About</a>
                     </li>
                 </ul>
             </nav>
@@ -415,6 +420,31 @@ s                                to define metro areas. This definition encompas
             <h2>To be continue</h2>
         </div> -->
 
+    </div>
+
+    <div id="hospital_popup" v-bind:style="{ display: display }">
+        <div class="popup-name" v-if="basic_details">
+            <span><h4>Address: </h4><h3>{{district}} {{address}}</h3></span>
+            <span><h4>Name: </h4><h3>{{name}}</h3></span>
+        </div>
+        <div class="separator"></div>
+        <div class="popup-name" v-if="opened_detail">
+            <span><h4>开诊科室: {{opened}}</h4></span>
+        </div>
+        <div class="popup-name" v-if="closed_detail">
+            <span><h4>停诊科室: {{closed}}</h4></span>
+        </div>
+        <div class="separator"></div>
+        <div class="popup-name" v-if="call_detail">
+            <span><h4>总机: {{call}}</h4></span>
+        </div>
+        <div class="popup-name" v-if="out_call_detail">
+            <span><h4>门诊电话: {{outpatient_call}}</h4></span>
+        </div>
+        <div class="popup-name" v-if="emer_call_detail">
+            <span><h4>急诊电话: {{emergency_call}}</h4></span>
+        </div>
+        
     </div>
 
     
