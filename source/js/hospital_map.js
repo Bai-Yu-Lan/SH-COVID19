@@ -1,5 +1,5 @@
 // 定义地图背景
-var hospitalMap = new mapboxgl.Map({
+let hospitalMap = new mapboxgl.Map({
     // container: "hosp-lightbox",
     container: "hospMap",
     style: carto.basemaps.darkmatter,
@@ -64,6 +64,87 @@ function draw_hospitalMap(json_data){
     const layer = new carto.Layer("hospital_layer", source, viz)
     layer.addTo(hospitalMap)
     hospitalMap.resize()
+
+    const hosp_popup = new Vue({
+        el: "#hospital_popup",
+        data: {
+            address: null,
+            name: null,
+            district: null,
+            color: "black",
+            closed: null,
+            opened: null,
+            call: null,
+            outpatient_call: null,
+            emergency_call: null
+        },
+        computed: {
+            display: function () {
+                //console.log("[vue] popup info", this.name, this.cat, this.segregation);
+                return this.address === null ? "none" : "block";
+            },
+            basic_details: function () {
+                return !!this.address && !!this.name && !!this.district;
+            },
+            opened_detail: function(){
+                return !!this.opened
+            },
+            closed_detail: function(){
+                return !!this.closed
+            },
+            call_detail: function(){
+                return !!this.call
+            },
+            out_call_detail: function(){
+                return !!this.outpatient_call
+            },
+            emer_call_detail: function(){
+                return !!this.emergency_call
+            },
+        },
+    });
+
+    const hosp_interactivity = new carto.Interactivity(layer)
+    // TODO 鼠标点击的时候显示信息
+    // hosp_interactivity.on("featureClick", featureClickHandler)
+    // hosp_interactivity.on("featureClickOut", featureClickOutHandler)
+    hosp_interactivity.on("featureHover", featureHoverHandler)
+    hosp_interactivity.on("featureLeave", featureLeaveHandler)
+
+    var hosPopup
+    function featureHoverHandler(event){
+        const feature = event.features[0];
+        if (event.features.length < 1) {
+            return;
+        }
+        hosp_popup.address = feature.variables.address.value
+        hosp_popup.name = feature.variables.name.value
+        hosp_popup.district = feature.variables.district.value
+        hosp_popup.closed = feature.variables.closed.value
+        hosp_popup.opened = feature.variables.opened.value
+        hosp_popup.call = feature.variables.call.value
+        hosp_popup.outpatient_call = feature.variables.outpatient_call.value
+        hosp_popup.emergency_call = feature.variables.emergency_call.value
+
+        const coords = event.coordinates;
+        temp_lon = coords.lng.toFixed(4)
+        temp_lat = coords.lat.toFixed(4)
+
+        if (hosPopup){
+            hosPopup.remove()
+            event.features.forEach((feature) => feature.reset());
+        }
+        hosPopup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+        }).setLngLat([temp_lon, temp_lat])
+            .setDOMContent(hosp_popup.$el)
+            .addTo(hospitalMap)
+    }
+    function featureLeaveHandler(event){
+        hosPopup.remove()
+        event.features.forEach((feature) => feature.reset());
+    }
 }
 
 load_hospitalMap("source/data/CaseInfo_April/hospital_info.json", draw_hospitalMap)

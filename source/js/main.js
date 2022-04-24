@@ -264,7 +264,7 @@ function loadMap(json_data, grouped_data, csv_data, poi_info_dict, min_w, max_w)
 
     console.log("Loading Map...")
 
-    // var cityPopup
+    var cityPopup
     // 定义点击POI后的格式
     const popup = new Vue({
         el: "#popup",
@@ -341,23 +341,20 @@ function loadMap(json_data, grouped_data, csv_data, poi_info_dict, min_w, max_w)
         // let end1 = performance.now();
         // console.log('\t stage 1 cost is', `${end1 - start1}ms`) 
 
-        // if (cityPopup) {
-        //     cityPopup.remove();
-        //     event.features.forEach((feature) => feature.reset());
-        // }
-        // cityPopup = new mapboxgl.Popup({
-        //     closeButton: false,
-        //     closeOnClick: false,
-        // }).setLngLat([coords.lng, coords.lat])
-        //     .setDOMContent(popup.$el)
-        //     .addTo(map)
+        if (cityPopup) {
+            cityPopup.remove();
+            event.features.forEach((feature) => feature.reset());
+        }
+        cityPopup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+        }).setLngLat([coords.lng, coords.lat])
+            .setDOMContent(popup.$el)
+            .addTo(map)
 
         // console.log("\t # stage 2... %")
         // let start2 = performance.now();
 
-        new mapboxgl.Popup().setLngLat([coords.lng, coords.lat])
-            .setDOMContent(popup.$el)
-            .addTo(map)
 
         var aimData = csv_data.filter(function(d){
             // return d.address === feature.variables.address.value
@@ -449,7 +446,7 @@ function loadMap(json_data, grouped_data, csv_data, poi_info_dict, min_w, max_w)
         // let start = performance.now();
 
         event.features.forEach((feature) => feature.reset());
-        // cityPopup.remove();
+        cityPopup.remove();
         if (aside_info.district!=="上海市"){
             aside_info.district = "上海市"
             plotSideStackedBars("上海市", grouped_data, 320, 80)
