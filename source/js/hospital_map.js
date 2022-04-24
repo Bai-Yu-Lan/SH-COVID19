@@ -106,10 +106,10 @@ function draw_hospitalMap(json_data){
 
     const hosp_interactivity = new carto.Interactivity(layer)
     // TODO 鼠标点击的时候显示信息
-    // hosp_interactivity.on("featureClick", featureClickHandler)
-    // hosp_interactivity.on("featureClickOut", featureClickOutHandler)
-    hosp_interactivity.on("featureHover", featureHoverHandler)
-    hosp_interactivity.on("featureLeave", featureLeaveHandler)
+    hosp_interactivity.on("featureClick", featureHoverHandler)
+    hosp_interactivity.on("featureClickOut", featureLeaveHandler)
+    // hosp_interactivity.on("featureHover", featureHoverHandler)
+    // hosp_interactivity.on("featureLeave", featureLeaveHandler)
 
     var hosPopup
     function featureHoverHandler(event){

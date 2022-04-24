@@ -40,7 +40,7 @@
     <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-auth.js"></script> -->
     
     <!-- Global site tag (gtag.js) - Google Analytics 好像没什么作用 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131292688-1"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131292688-1"></script>
     <script>
         // 对象window.dataLayer（undefined 或 null）还没定义 则赋值为[]空数组, 如果定义了 就直接重新赋值
         window.dataLayer = window.dataLayer || []; 
@@ -48,10 +48,20 @@
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'UA-131292688-1');
+    </script> -->
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DZ401K35PR"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-DZ401K35PR');
     </script>
 
-    <meta name="google-site-verification" content="wUGXCNe74cJtu6A-gCJhyEkbT_jRrK7McoKIZpMWu5E" />
-    <meta name="description" content="Explore inequality of places, not neighborhoods, using a tool developed at the MIT Media Lab."/>
+    <!-- <meta name="google-site-verification" content="wUGXCNe74cJtu6A-gCJhyEkbT_jRrK7McoKIZpMWu5E" />
+    <meta name="description" content="Explore inequality of places, not neighborhoods, using a tool developed at the MIT Media Lab."/> -->
 
     <link href='source/css/plotTemplate.css' rel='stylesheet'/>
     
@@ -102,7 +112,7 @@
 
         <!-- Hospital栏信息 -->
         <div id="hosp-lightbox" class="section-lightbox js-lightbox">
-            <div class="as-map-area as-map-area--visible" style="height: 100%;width: 100%;">
+            <div class="as-map-area as-map-area--visible" style="height: 100%;width: 100%; position: absolute">
                 <!-- <div id="hospMap" style="width: 100%;"></div> -->
                 <div id="hospMap" class="hospital_map"></div>
             </div>
@@ -178,7 +188,7 @@ s                                to define metro areas. This definition encompas
                         This project aims at collecting, sharing, and visualizing the latest 
                         data released by the <a href="https://wsjkw.sh.gov.cn/" title="Shanghai Municipal Health Commission" target="_blank">Shanghai Municipal Health Commission</a>. 
                         The visualization was inspired by the "<a href="https://inequality.media.mit.edu" title="atlas of inequality" target="_blank">atlas of inequality</a>" 
-                        website designed by MIT Media Lab. We also developed a  
+                        website designed by <a href="https://www.media.mit.edu/" title="MIT Media Lab" target="_blank">MIT Media Lab</a>. We also developed a  
                         large-scale Agent-Based System (ABS) to simulate the spread 
                         of Omicron in the mega city. We expect that our simulation 
                         and analysis could assist the preparation of reopening strategies in Shanghai.  
@@ -403,9 +413,12 @@ s                                to define metro areas. This definition encompas
 
     <div id="popup" v-bind:style="{ display: display }">
         <div class="popup-name" v-if="details">
-            <span><h4>Address: </h4><h3>{{ address }}</h3></span>
+            <!-- <span><h4>Address: </h4><h3>{{ address }}</h3></span>
             <span><h4>Name: </h4><h3>{{ name }}</h3></span>
-            <h4>Report {{reportNum}} time in {{daycount}} days</h4>
+            <h4>Report {{reportNum}} time in {{daycount}} days</h4> -->
+            <span><h4>地址: </h4><h3>{{ address }}</h3></span>
+            <span><h4>名称: </h4><h3>{{ name }}</h3></span>
+            <h4>在过去 {{daycount}} 天内被通报 {{reportNum}} 次</h4>
         </div>
         <div class="popup-inner">
             <span class="popup-status" v-bind:style="{ backgroundColor: color }"></span>
