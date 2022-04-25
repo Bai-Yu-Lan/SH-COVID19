@@ -16,11 +16,14 @@
     <!-- Include Mapbox GL from the Mapbox CDN-->
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js"></script>
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css" rel="stylesheet" />
-    
-    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.min.js'></script>
-    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.css' type='text/css' />
 
-    <link href='source/css/mitTemplate.css' rel='stylesheet'/>
+    <script
+        src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.min.js'></script>
+    <link rel='stylesheet'
+        href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.css'
+        type='text/css' />
+
+    <link href='source/css/mitTemplate.css' rel='stylesheet' />
     <!-- <link href='https://d33wubrfki0l68.cloudfront.net/bundles/85e46ca9df06f917ba01d3dd0e9bdf229346199e.css' rel='stylesheet'/> -->
     <!-- <link href='d33wubrfki0l68.cloudfront.net/bundles/85e46ca9df06f917ba01d3dd0e9bdf229346199e.css' rel='stylesheet'/> -->
 
@@ -38,7 +41,7 @@
     <!-- <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-auth.js"></script> -->
-    
+
     <!-- Global site tag (gtag.js) - Google Analytics 好像没什么作用 -->
     <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131292688-1"></script>
     <script>
@@ -54,7 +57,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DZ401K35PR"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+        function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
 
         gtag('config', 'G-DZ401K35PR');
@@ -63,8 +66,15 @@
     <!-- <meta name="google-site-verification" content="wUGXCNe74cJtu6A-gCJhyEkbT_jRrK7McoKIZpMWu5E" />
     <meta name="description" content="Explore inequality of places, not neighborhoods, using a tool developed at the MIT Media Lab."/> -->
 
-    <link href='source/css/plotTemplate.css' rel='stylesheet'/>
-    
+    <link href='source/css/plotTemplate.css' rel='stylesheet' />
+    blockquote {
+    border-left: 4px solid #dfe2e5;
+    padding: 0 15px;
+    color: #777777;
+    }
+    blockquote blockquote {
+    padding-right: 0;
+    }
 </head>
 
 <body class="as-app-body on-map">
@@ -77,9 +87,9 @@
                 <!-- <img src="source/img/baiyulan_logo.png" width="80" height="55"/> -->
                 <!-- <img src="source/img/baiyulan_logo2.png" width="300" height="35"/> -->
                 <a href="http://www.baiyulan.org.cn/" class="as-toolbar__item" target="_blank">
-                    <img src="source/img/baiyulan_logo3.png" width="256" height="40"/>
+                    <img src="source/img/baiyulan_logo3.png" width="256" height="40" />
                 </a>
-                
+
             </div>
             <button class='as-toolbar__item as-toolbar__toggle js-burger'>
                 <i class='as-icon-hamburguer as-title as-m--0'></i>
@@ -92,19 +102,23 @@
                     </li>
                     <li>
                         <!-- <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#hosp-lightbox" id="load_hospital_map">Hospitals</a> -->
-                        <a href="#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#hosp-lightbox" id="load_hospital_map">Hospitals</a>
+                        <a href="#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#hosp-lightbox"
+                            id="load_hospital_map">Hospitals</a>
                     </li>
                     <li>
                         <!-- <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#simulation-lightbox">Simulation</a> -->
-                        <a href="#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#simulation-lightbox">Simulation</a>
+                        <a href="#" class="as-toolbar__item js-lightbox-selector"
+                            data-lightbox="#simulation-lightbox">Simulation</a>
                     </li>
                     <li>
                         <!-- <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#datas-lightbox">Data</a> -->
-                        <a href="#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#datas-lightbox">Data</a>
-                    </li> 
+                        <a href="#" class="as-toolbar__item js-lightbox-selector"
+                            data-lightbox="#datas-lightbox">Data</a>
+                    </li>
                     <li>
                         <!-- <a href="index.html#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#about-lightbox">About</a> -->
-                        <a href="#" class="as-toolbar__item js-lightbox-selector" data-lightbox="#about-lightbox">About</a>
+                        <a href="#" class="as-toolbar__item js-lightbox-selector"
+                            data-lightbox="#about-lightbox">About</a>
                     </li>
                 </ul>
             </nav>
@@ -116,8 +130,8 @@
                 <!-- <div id="hospMap" style="width: 100%;"></div> -->
                 <div id="hospMap" class="hospital_map"></div>
             </div>
-            
-            
+
+
 
         </div>
 
@@ -125,25 +139,102 @@
         <div id="datas-lightbox" class="section-lightbox js-lightbox">
             <div class="section-content datas-section">
                 <div class="heading">
-                    <h1>Methods</h1>
-                    <p>How do we calculate place inequality?</p>
+                    <h1>Data</h1>
+                    <!-- <p>How do we calculate place inequality?</p> -->
+                    <p><span>我们每天从</span><a href='https://wsjkw.sh.gov.cn/' target='_blank'
+                            class='url'>上海卫健委</a><span>的官方网站获取：疫情期间各个区县以及上海市整体每日新增的确诊病例与无症状感染者数量与居住地、解除医学观察无症状感染者人数、治愈出院人数等信息。我们的代码与数据可以在</span><a
+                            href='https://github.com/Bai-Yu-Lan/SH-COVID19' target='_blank'
+                            class='url'>https://github.com/Bai-Yu-Lan/SH-COVID19</a><span>获取。</span>
+                    </p>
                     <div class="separator">
                     </div>
                 </div>
-                <ol> 
-                    <li> 
-                        <h2>Data</h2>
-                        <p>Our anonymous data contains billions of visits to
+                <ol>
+
+                    <!-- <h2>Data</h2> -->
+                    <!-- <p>Our anonymous data contains billions of visits to
                             locations in the Boston Metro Area from October
-                            2016 to March 2017. We analyze mobility patterns of about 150,000 anonymous users, provided through <a href="https://www.cuebiq.com/about/data-for-good/">Cuebiq’s Data for Good initiative</a>, in the whole Boston Metro area (around 3% of the population). MIT Media Lab coupled Cuebiq's anonymous location data with census information to determine user income groups and identify user visitation patterns to places.
-                            We use the census-based <a href="https://en.wikipedia.org/wiki/Core-based_statistical_area" title="Wikipedia Core-based statistical areas">core-based statistical areas</a>
-s                                to define metro areas. This definition encompasses
+                            2016 to March 2017. We analyze mobility patterns of about 150,000 anonymous users, provided
+                            through <a href="https://www.cuebiq.com/about/data-for-good/">Cuebiq’s Data for Good
+                                initiative</a>, in the whole Boston Metro area (around 3% of the population). MIT Media
+                            Lab coupled Cuebiq's anonymous location data with census information to determine user
+                            income groups and identify user visitation patterns to places.
+                            We use the census-based <a href="https://en.wikipedia.org/wiki/Core-based_statistical_area"
+                                title="Wikipedia Core-based statistical areas">core-based statistical areas</a>
+                            s to define metro areas. This definition encompasses
                             the cities, suburbs, and commuting zones that are
                             economically tied to a central city of interest.
                             In the Boston case, it contains large areas in New
-                            Hampshire and down the Massachusetts coast. 
-                                Finally, we have used the public Foursquare API to get the list of the 30,000 places that users visit.</p> 
-                    </li> 
+                            Hampshire and down the Massachusetts coast.
+                            Finally, we have used the public Foursquare API to get the list of the 30,000 places that
+                            users visit.</p> -->
+                    <li>
+                        <h2 id='患者居住地信息'><span>患者居住地信息</span></h2>
+                    </li>
+                    <p><span>从上海卫健委手动获取当日患者的居住地信息之后，通过</span><code>update_address.ipynb</code><span>，我们更新包含所有地址的</span><code>all_address.npy</code><span>，然后通过百度地图API获取新增地址所属区县与街道、对应的POI名称与类型、对应的经纬度坐标。</span>
+                    </p>
+                    <blockquote>
+                        <p><span> 例如，对于徐汇区宜山路600号，可以得到：上海市，徐汇区，田林街道，上海市第六人民医院，医疗，(121.420···, 31.181···)</span></p>
+                    </blockquote>
+                    <p><span>由于居住地信息中存在多个地址信息对应同一个POI的情况，为了便于进行可视化，我们以
+                        </span><code>[省市]-[区县]-[街道]-[经纬度]</code><span> 的格式对每一个坐标点进行编码。</span></p>
+                    <blockquote>
+                        <p><span> 例如，上海市，徐汇区，田林街道，(121.420···, 31.181···) -&gt; 021-01-02-123，</span></p>
+                        <p><span> 其中，徐汇区对应区县编码01，田林街道对应徐汇区街道编码02，(121.420···, 31.181···) 对应田林街道的坐标点编码123。</span></p>
+                    </blockquote>
+                    <p><span>通过这样的编码方式，我们可以正确统计POI在21天之内被通报次数的情况，将上海所有POI被通报情况存入</span><code>time_series.csv</code><span>中：若当日被通报，则对应位置将被置为1。</span>
+                    </p>
+                    <!-- <figure>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><span> Encode </span></th>
+                                    <th><span> 0309 </span></th>
+                                    <th><span> 0310 </span></th>
+                                    <th><span> .... </span></th>
+                                    <th><span> 0423 </span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span>0210610055</span></td>
+                                    <td><span>0</span></td>
+                                    <td><span>1</span></td>
+                                    <td><span>...</span></td>
+                                    <td><span>1</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>...</span></td>
+                                    <td><span>...</span></td>
+                                    <td><span>...</span></td>
+                                    <td><span>...</span></td>
+                                    <td><span>...</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>0210607004</span></td>
+                                    <td><span>1</span></td>
+                                    <td><span>0</span></td>
+                                    <td><span>...</span></td>
+                                    <td><span>0</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </figure> -->
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+
+                    <li>
+                        <h2 id='医院开诊情况'><span>医院开诊情况</span></h2>
+                    </li>
+                    <p><span>我们从上海卫健委获取最新医院开诊情况以及联系电话之后，通过调用百度地图API获取医院的经纬度坐标以便于可视化。</span></p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <li>
+                        <h2 id='医疗资源使用情况'><span>医疗资源使用情况</span></h2>
+                    </li>
+                    <p><span>在这一部分中，我们通过统计上海每日闭环管理与社会面筛查中新增的无症状感染者、每日解除观察的无症状感染者来估计目前方舱的占用情况；通过统计每日新增确诊人数、每日出院人数来估计医院的占用情况。由于缺少各个区县每日解除观察无症状感染者的数据，我们暂时无法估计区县级别方舱使用情况。</span>
+                    </p>
+
                 </ol>
             </div>
         </div>
@@ -165,124 +256,155 @@ s                                to define metro areas. This definition encompas
                 </ol>
             </div>
         </div>
+        
         <!-- about栏信息 -->
         <div id="about-lightbox" class="section-lightbox js-lightbox">
             <div class="section-content about-section">
                 <div class="heading">
                     <h1>About</h1>
                     <p>
-                        The COVID-19 (Omicron variant) broke out in Shanghai in March, 2022. 
-                        The total number of infections has surpassed 416,000 by April 20, 
-                        seriously affecting social well-being and economic activities. 
-                        To curb the spread of Omicron, the goverment has imposed different 
-                        levels travel restriction to communities and carried out COVID 
+                        The COVID-19 (Omicron variant) broke out in Shanghai in March, 2022.
+                        The total number of infections has surpassed 416,000 by April 20,
+                        seriously affecting social well-being and economic activities.
+                        To curb the spread of Omicron, the goverment has imposed different
+                        levels travel restriction to communities and carried out COVID
                         testing at the population scale. <br /> <br />
                     </p>
                     <p>
-                        The Shanghai COVID-19 Reopen is a research project jointly launched 
-                        by OMNILab, <a href="https://ai.sjtu.edu.cn/" title="AI Institute" target="_blank">AI Institute</a>,
-                        Shanghai Jiao Tong University and 
-                        <a href="http://baiyulan.org.cn/" title="Baiyulan Open AI" target="_blank">Baiyulan Open AI</a> in early April, 2022. <br /> <br />
+                        The Shanghai COVID-19 Reopen is a research project jointly launched
+                        by OMNILab, <a href="https://ai.sjtu.edu.cn/" title="AI Institute" target="_blank">AI
+                            Institute</a>,
+                        Shanghai Jiao Tong University and
+                        <a href="http://baiyulan.org.cn/" title="Baiyulan Open AI" target="_blank">Baiyulan Open AI</a>
+                        in
+                        early April, 2022. <br /> <br />
                     </p>
                     <p>
-                        This project aims at collecting, sharing, and visualizing the latest 
-                        data released by the <a href="https://wsjkw.sh.gov.cn/" title="Shanghai Municipal Health Commission" target="_blank">Shanghai Municipal Health Commission</a>. 
-                        The visualization was inspired by the "<a href="https://inequality.media.mit.edu" title="atlas of inequality" target="_blank">atlas of inequality</a>" 
-                        website designed by <a href="https://www.media.mit.edu/" title="MIT Media Lab" target="_blank">MIT Media Lab</a>. We also developed a  
-                        large-scale Agent-Based System (ABS) to simulate the spread 
-                        of Omicron in the mega city. We expect that our simulation 
-                        and analysis could assist the preparation of reopening strategies in Shanghai.  
+                        This project aims at collecting, sharing, and visualizing the latest
+                        data released by the <a href="https://wsjkw.sh.gov.cn/"
+                            title="Shanghai Municipal Health Commission" target="_blank">Shanghai Municipal Health
+                            Commission</a>.
+                        The visualization was inspired by the "<a href="https://inequality.media.mit.edu"
+                            title="atlas of inequality" target="_blank">atlas of inequality</a>"
+                        website designed by <a href="https://www.media.mit.edu/" title="MIT Media Lab"
+                            target="_blank">MIT
+                            Media Lab</a>. We also developed a
+                        large-scale Agent-Based System (ABS) to simulate the spread
+                        of Omicron in the mega city. We expect that our simulation
+                        and analysis could assist the preparation of reopening strategies in Shanghai.
                     </p>
                     <div class="separator">
                     </div>
                 </div>
-                <div> 
+                <div>
                     <h2>Principal Investigators:</h2>
                     <ul>
                         <li>
                             <div>
-                                <img src="source/img/photo/yxu.png" width="100" height="140" > 
-                                <p><a href="http://humnetlab.berkeley.edu/~yxu/" title="Yanyan Xu" target="_blank">Yanyan Xu</a><br /> 
-                                    AI Institute, SJTU 
+                                <img src="source/img/photo/yxu.png" width="100" height="140">
+                                <p><a href="http://humnetlab.berkeley.edu/~yxu/" title="Yanyan Xu"
+                                        target="_blank">Yanyan
+                                        Xu</a><br />
+                                    AI Institute, SJTU
                                 </p>
                             </div>
                         </li>
                         <li>
                             <div>
-                                <img src="source/img/photo/yhjin.png" width="100" height="140" > 
+                                <img src="source/img/photo/yhjin.png" width="100" height="140">
                                 <p>Yaohui Jin<br />Baiyulan Open AI<br />AI Institute, SJTU</p>
                             </div>
                         </li>
                         <li>
                             <div>
-                                <img src="source/img/photo/xkyang.png" width="100" height="140" > 
+                                <img src="source/img/photo/xkyang.png" width="100" height="140">
                                 <p>Xiaokang Yang<br />AI Institute, SJTU</p>
                             </div>
                         </li>
                     </ul>
-                </div> 
-                <div> 
+                </div>
+                <div>
                     <h2>Researchers:</h2>
                     <ul>
                         <li>
                             <div>
-                                <img src="source/img/photo/qydu.png" width="100" height="140" > 
+                                <img src="source/img/photo/qydu.png" width="100" height="140">
                                 <p>Qinyi Du<br />AI Institute, SJTU<br /><em>Model development</em></p>
 
                             </div>
                         </li>
                         <li>
                             <div>
-                                <img src="source/img/photo/zphu.png" width="100" height="140" > 
+                                <img src="source/img/photo/zphu.png" width="100" height="140">
                                 <p>Zhaoping Hu<br />AI Institute, SJTU<br /><em>Visualization</em></p>
                             </div>
                         </li>
                         <li>
                             <div>
-                                <img src="source/img/photo/syhuang.png" width="100" height="140" > 
+                                <img src="source/img/photo/syhuang.png" width="100" height="140">
                                 <p>Shaoyu Huang<br />AI Institute, SJTU<br /><em>Model development</em></p>
                             </div>
                         </li>
                         <li>
                             <div>
-                                <img src="source/img/photo/syxu.png" width="100" height="140" > 
+                                <img src="source/img/photo/syxu.png" width="100" height="140">
                                 <p>Shengyuan Xu<br />AI Institute, SJTU<br /><em>Data preparation</em></p>
                             </div>
                         </li>
-                        
+
                     </ul>
                 </div>
                 <div class="separator">
                 </div>
-                <div> 
+                <div>
                     <h2>Contact:</h2>
                     <p><a href="mailto:contact@baiyulan.org.cn">contact@baiyulan.org.cn</a></p>
                 </div>
                 <div class="separator">
                 </div>
-                <div> 
+                <div>
                     <h2>Acknowledgments:</h2>
-                </div> 
+                </div>
                 <ul class="acknowledgments">
                     <li class="partner-section">
                         <div class="image-container">
-                            <img src="source/img/baiyulan-logo-01.png" width="194" height="50" alt="cuebiq" >
+                            <img src="source/img/baiyulan-logo-01.png" width="194" height="50" alt="cuebiq">
                         </div>
                         <div class="description-container">
-                            <p>Baiyulan Open AI Lab is committed to promoting the R&D and open source of artificial intelligence software frameworks. Taking the spirit of open source culture as direction, it adheres to the principles of "Participate in, be an integrate part and ready to lead", "Rooted in Shanghai and facing the world", actively accelerates Chinese's open source 
-                                rules and community building, promotes the mutual recognition of international rules of open source software, forms "computing power, algorithm, data, scene, compliance" integrative AI in the priority areas, builds a key node of the international artificial intelligence development ecological network.</p>
+                            <p>Baiyulan Open AI Lab is committed to promoting the R&D and open source of artificial
+                                intelligence software frameworks. Taking the spirit of open source culture as direction,
+                                it
+                                adheres to the principles of "Participate in, be an integrate part and ready to lead",
+                                "Rooted in Shanghai and facing the world", actively accelerates Chinese's open source
+                                rules and community building, promotes the mutual recognition of international rules of
+                                open
+                                source software, forms "computing power, algorithm, data, scene, compliance" integrative
+                                AI
+                                in the priority areas, builds a key node of the international artificial intelligence
+                                development ecological network.</p>
                         </div>
                     </li>
                     <li class="partner-section">
                         <div class="image-container">
-                            <img src="source/img/sjtu-ai-logo.png" width="194" height="40" alt="CARTO" > 
+                            <img src="source/img/sjtu-ai-logo.png" width="194" height="40" alt="CARTO">
                         </div>
-                        <div class="description-container">   
-                            <p>Artificial Intelligence is profoundly changing the pattern of social and economic development. Faced with the strategic deployment of China and Shanghai, Shanghai Jiao Tong University gathers internal and external resources and founded the Institute of Artificial Intelligence on Jan.18, 2018, seizing the major strategic opportunity for AI development.
-                                As the AI research entity of Shanghai Jiao Tong University, the Institute accelerates the building of research team, actively organizes the construction of research center and coordinates the scientific research in AI field on campus, becoming a unified export of the school's foreign exchange and transformation of scientific research achievements.</p>
+                        <div class="description-container">
+                            <p>Artificial Intelligence is profoundly changing the pattern of social and economic
+                                development. Faced with the strategic deployment of China and Shanghai, Shanghai Jiao
+                                Tong
+                                University gathers internal and external resources and founded the Institute of
+                                Artificial
+                                Intelligence on Jan.18, 2018, seizing the major strategic opportunity for AI
+                                development.
+                                As the AI research entity of Shanghai Jiao Tong University, the Institute accelerates
+                                the
+                                building of research team, actively organizes the construction of research center and
+                                coordinates the scientific research in AI field on campus, becoming a unified export of
+                                the
+                                school's foreign exchange and transformation of scientific research achievements.</p>
                         </div>
                     </li>
-                </ul> 
+                </ul>
             </div>
         </div>
 
@@ -291,7 +413,7 @@ s                                to define metro areas. This definition encompas
                 <main class="as-main">
                     <div class="as-map-area as-map-area--visible">
                         <div id="map"></div>
-                        
+
                         <div class="legend legend-panel js-legend hide-in-onboarding" id="raw_legend">
                             <div class="widgets-item legend-inner">
                                 <h2 class="as-body as-font--medium legend-text">最近通报</h2>
@@ -305,7 +427,8 @@ s                                to define metro areas. This definition encompas
                             </div>
                         </div>
 
-                        <div class="legend legend-panel-c js-legend hide-in-onboarding is-hidden" id="category_legend" style="width: 150px;">
+                        <div class="legend legend-panel-c js-legend hide-in-onboarding is-hidden" id="category_legend"
+                            style="width: 150px;">
                             <div class="widgets-item legend-inner">
                                 <h2 class="as-body as-font--medium legend-text">POI类型</h2>
                                 <ul class="category-legend">
@@ -341,9 +464,10 @@ s                                to define metro areas. This definition encompas
                             </div>
 
                         </div>
-                        
+
                         <a href="https://carto.com/" class="floating-carto-logo" target="_blank">
-                            <img src="https://d33wubrfki0l68.cloudfront.net/2ca7b110f4639c3bbb5c74b6ca4ce0416a4053f8/35a30/img/carto-logo.svg" alt="CARTO" />
+                            <img src="https://d33wubrfki0l68.cloudfront.net/2ca7b110f4639c3bbb5c74b6ca4ce0416a4053f8/35a30/img/carto-logo.svg"
+                                alt="CARTO" />
                         </a>
                     </div>
                 </main>
@@ -356,14 +480,14 @@ s                                to define metro areas. This definition encompas
                                 <script>
                                     t_div = document.getElementById('datetime')
                                     var now_date = new Date()
-                                    t_div.innerHTML = "数据更新日期： "+now_date.getFullYear()+"年"
-                                            +(now_date.getMonth()+1)+"月"
-                                            +(now_date.getDate())+"日"
+                                    t_div.innerHTML = "数据更新日期： " + now_date.getFullYear() + "年"
+                                        + (now_date.getMonth() + 1) + "月"
+                                        + (now_date.getDate()) + "日"
                                     // setInterval("document.getElementById('datetime').innerHTML=new Date().toLocaleString();", 1000);
                                 </script>
                             </div>
                         </section>
-                        
+
                         <!-- <section data-help="B" class="as-box" id="search-container"></section> -->
 
                         <section data-help="C" class="as-box" id="regionPlot">
@@ -371,32 +495,33 @@ s                                to define metro areas. This definition encompas
                                 <b>{{district}}</b> 新增病例数
                                 <section id="region_num_plot"></section>
                             </div>
-                            
+
 
                             <div class="aside_text" v-if="details">
                                 <b>{{district}}</b> 医疗资源使用情况
                                 <section id="hospital_num_plot"></section>
                             </div>
-                            
+
 
                             <div class="aside_text" v-if="details">
                                 <b>{{district}}</b> 社会面新增
                                 <section id="society_add_num_plot"></section>
                             </div>
-                            
+
                         </section>
 
                         <section data-help="D" class="as-box">
-                            <as-switch label="Color by category" ></as-switch>
+                            <as-switch label="Color by category"></as-switch>
                         </section>
                         <section data-help="E" class="as-box">
-                            <as-category-widget heading="小区数量" default-bar-color="#47DB99" show-clear-button="true"></as-category-widget>
+                            <as-category-widget heading="小区数量" default-bar-color="#47DB99" show-clear-button="true">
+                            </as-category-widget>
                         </section>
                     </div>
                 </aside>
             </section>
         </as-responsive-content>
-        
+
         <!-- <footer class="footer hide-in-onboarding">
             <div class="orgs">
                 <a href="https://www.media.mit.edu/groups/human-dynamics/overview/" class="as-toolbar__item" target="_blank"><img src="https://d33wubrfki0l68.cloudfront.net/91f555da4bb714f0a605c8d15c4818ddc4416643/3ce45/img/human-dynamics-logo.svg" alt="human dynamics" /></a>
@@ -416,8 +541,14 @@ s                                to define metro areas. This definition encompas
             <!-- <span><h4>Address: </h4><h3>{{ address }}</h3></span>
             <span><h4>Name: </h4><h3>{{ name }}</h3></span>
             <h4>Report {{reportNum}} time in {{daycount}} days</h4> -->
-            <span><h4>地址: </h4><h3>{{ address }}</h3></span>
-            <span><h4>名称: </h4><h3>{{ name }}</h3></span>
+            <span>
+                <h4>地址: </h4>
+                <h3>{{ address }}</h3>
+            </span>
+            <span>
+                <h4>名称: </h4>
+                <h3>{{ name }}</h3>
+            </span>
             <h4>在过去 {{daycount}} 天内被通报 {{reportNum}} 次</h4>
         </div>
         <div class="popup-inner">
@@ -437,30 +568,46 @@ s                                to define metro areas. This definition encompas
 
     <div id="hospital_popup" v-bind:style="{ display: display }">
         <div class="popup-name" v-if="basic_details">
-            <span><h4>Address: </h4><h3>{{district}} {{address}}</h3></span>
-            <span><h4>Name: </h4><h3>{{name}}</h3></span>
+            <span>
+                <h4>Address: </h4>
+                <h3>{{district}} {{address}}</h3>
+            </span>
+            <span>
+                <h4>Name: </h4>
+                <h3>{{name}}</h3>
+            </span>
         </div>
         <div class="separator"></div>
         <div class="popup-name" v-if="opened_detail">
-            <span><h4>开诊科室: {{opened}}</h4></span>
+            <span>
+                <h4>开诊科室: {{opened}}</h4>
+            </span>
         </div>
         <div class="popup-name" v-if="closed_detail">
-            <span><h4>停诊科室: {{closed}}</h4></span>
+            <span>
+                <h4>停诊科室: {{closed}}</h4>
+            </span>
         </div>
         <div class="separator"></div>
         <div class="popup-name" v-if="call_detail">
-            <span><h4>总机: {{call}}</h4></span>
+            <span>
+                <h4>总机: {{call}}</h4>
+            </span>
         </div>
         <div class="popup-name" v-if="out_call_detail">
-            <span><h4>门诊电话: {{outpatient_call}}</h4></span>
+            <span>
+                <h4>门诊电话: {{outpatient_call}}</h4>
+            </span>
         </div>
         <div class="popup-name" v-if="emer_call_detail">
-            <span><h4>急诊电话: {{emergency_call}}</h4></span>
+            <span>
+                <h4>急诊电话: {{emergency_call}}</h4>
+            </span>
         </div>
-        
+
     </div>
 
-    
+
     <!-- <script src="https://libs.cartocdn.com/airship-components/v1.0.4-rc.4/airship.js"></script> -->
 
     <script src="source/js/libs.cartocdn.com/airship-components/v1.0.4-rc.4/airship.js"></script>
@@ -477,4 +624,5 @@ s                                to define metro areas. This definition encompas
     <script src="source/js/hospital_map.js"></script>
 
 </body>
+
 </html>
