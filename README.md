@@ -2,7 +2,7 @@ We obtain daily information from [Shanghai Municipal Health Commission](https://
 
 
 
-我们每天从[上海卫健委](https://wsjkw.sh.gov.cn/)的官方网站获取：疫情期间各个区县以及上海市整体每日新增的确诊病例与无症状感染者数量与居住地、解除医学观察无症状感染者人数、治愈出院人数等信息。我们的代码与数据可以在https://github.com/Bai-Yu-Lan/SH-COVID19获取。
+我们每天从[上海卫健委](https://wsjkw.sh.gov.cn/)的官方网站获取：疫情期间各个区县以及上海市整体每日新增的确诊病例与无症状感染者数量与居住地、解除医学观察无症状感染者人数、治愈出院人数等信息。我们的代码与数据可以在https://github.com/Bai-Yu-Lan/SH-COVID19 获取。
 
 
 
@@ -38,11 +38,11 @@ Since there are multiple address information corresponding to the same POI in th
 
 
 
-With such coding, we can correctly count the number of times POI was notified within 21 days, and store all POI notified in Shanghai in [time_series.csv](https://github.com/Bai-Yu-Lan/SH-COVID19/blob/main/source/data/CaseInfo_April/time_series.csv): if it was notified on the same day, the corresponding position will be set to 1.
+With such coding, we can correctly count the number of times POI was notified within 21 days, and store all POI notified in Shanghai in [daily_report_by_address.csv](https://github.com/Bai-Yu-Lan/SH-COVID19/blob/main/source/data/CaseInfo/daily_report_by_address.csv): if it was notified on the same day, the corresponding position will be set to 1.
 
 
 
-通过这样的编码方式，我们可以正确统计POI在21天之内被通报次数的情况，将上海所有POI被通报情况存入`time_series.csv`中：若当日被通报，则对应位置将被置为1。
+通过这样的编码方式，我们可以正确统计POI在21天之内被通报次数的情况，将上海所有POI被通报情况存入[daily_report_by_address.csv](https://github.com/Bai-Yu-Lan/SH-COVID19/blob/main/source/data/CaseInfo/daily_report_by_address.csv)中：若当日被通报，则对应位置将被置为1。
 
 
 
