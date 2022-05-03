@@ -46,7 +46,7 @@ With such coding, we can correctly count the number of times POI was notified wi
 
 
 
-| Encode     | 0309 | 0310 | ...  | 0423 |
+| addressID     | 0309 | 0310 | ...  | 0423 |
 | ---------- | ---- | ---- | --- | ---- |
 | 0210610055 | 0    | 1    | ...  | 1    |
 | ...        | ...  | ...  | ...  | ...  |
